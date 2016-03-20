@@ -1,6 +1,6 @@
 package trikita.slide;
 
-enum ActionType {
+public enum ActionType {
     SET_TEXT,
 
     OPEN_PRESENTATION,

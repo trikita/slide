@@ -1,48 +1,64 @@
 package trikita.slide;
 
-import trikita.jedux.Action;
+import android.graphics.Canvas;
+import android.graphics.Typeface;
+import android.text.Layout;
+import android.text.StaticLayout;
+import android.text.TextPaint;
 
 public class Slide {
-    static State reducer(Action<ActionType, ?> a, State s) {
-        switch (a.type) {
-            case SET_TEXT:
-                return ImmutableState.copyOf(s).withText((String) a.value);
-            case SET_PAGE:
-                return ImmutableState.copyOf(s).withPage((Integer) a.value);
-            case NEXT_PAGE:
-                return ImmutableState.copyOf(s)
-                        .withPage(Math.min(s.page()+1, paginate(s.text()).length-1));
-            case PREV_PAGE:
-                return ImmutableState.copyOf(s)
-                        .withPage(Math.max(s.page()-1, 0));
-            case OPEN_PRESENTATION:
-                return ImmutableState.copyOf(s).withPresentationMode(true);
-            case CLOSE_PRESENTATION:
-                return ImmutableState.copyOf(s).withPresentationMode(false);
-            case TOGGLE_TOOLBAR:
-                return ImmutableState.copyOf(s).withToolbarShown(!s.toolbarShown());
-            case SET_BACKGROUND:
-                return ImmutableState.copyOf(s).withBackgroundColor((Integer) a.value);
-            case SET_FOREGROUND:
-                return ImmutableState.copyOf(s).withForegroundColor((Integer) a.value);
-        }
-        return s;
-    }
-    static int page(String s, int pos) {
+    public static int page(String s, int pos) {
         if (pos > s.length()-1) {
             pos = s.length()-1;
         }
         return paginate(s.substring(0, pos+1)).length-1;
     }
 
-    static String[] paginate(String text) {
+    public static String[] paginate(String text) {
         return text.split("(\n\\s*){2,}");
     }
 
-    static String pageText(String text, int page) {
+    public static String pageText(String text, int page) {
         if (page < 0) {
             return "";
         }
         return paginate(text)[page];
+    }
+
+    public static void renderPage(String pageText, Canvas canvas, String typeface, int fg, int bg) {
+        TextPaint textPaint = new TextPaint();
+        canvas.drawColor(bg);
+        textPaint.setColor(fg);
+        textPaint.setAntiAlias(true);
+        textPaint.setTypeface(Typeface.create(typeface, 0));
+
+        String text = pageText.trim().replaceAll("\n\\.", "\n");
+
+        float margin = 0.1f;
+
+        int w = (int) (canvas.getWidth() * (1 - margin * 2));
+        int h = (int) (canvas.getHeight() * (1 - margin * 2));
+
+        int lines = text.split("\n").length;
+
+        for (int textSize = canvas.getHeight() / lines; textSize > 1 ; textSize--) {
+            textPaint.setTextSize(textSize);
+            if (StaticLayout.getDesiredWidth(text, textPaint) <= w) {
+                StaticLayout layout = new StaticLayout(text, textPaint, w, Layout.Alignment.ALIGN_NORMAL, 1, 0, false);
+                if (layout.getHeight() >= h) {
+                    continue;
+                }
+                int l = 0;
+                for (int i = 0; i < layout.getLineCount(); i++) {
+                    int m = (int) (canvas.getWidth() - layout.getLineWidth(i))/2;
+                    if (i == 0 || m < l) {
+                        l = m;
+                    }
+                }
+                canvas.translate(l, (canvas.getHeight() - layout.getHeight())/2);
+                layout.draw(canvas);
+                return;
+            }
+        }
     }
 }

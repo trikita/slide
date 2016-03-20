@@ -1,4 +1,4 @@
-package trikita.slide;
+package trikita.slide.ui;
 
 import android.content.Context;
 import android.widget.EditText;

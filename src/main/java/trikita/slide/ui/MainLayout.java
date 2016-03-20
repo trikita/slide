@@ -1,4 +1,4 @@
-package trikita.slide;
+package trikita.slide.ui;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -8,30 +8,30 @@ import android.view.View;
 import trikita.anvil.Anvil;
 import trikita.anvil.RenderableView;
 import trikita.jedux.Action;
-import trikita.jedux.Store;
+import trikita.slide.ActionType;
+import trikita.slide.App;
+import trikita.slide.R;
+import trikita.slide.Slide;
 
 import static trikita.anvil.DSL.*;
 
 public class MainLayout extends RenderableView {
 
-    final static int COLOR_SCHEMES[][] = {
+    public final static int COLOR_SCHEMES[][] = {
             {0xffffffff, 0xff000000},
             {0xff000000, 0xffffffff},
             {0xff03a9f4, 0xff000000},
             {0xffecf0f1, 0xff34495e},
     };
 
-    private static Store<Action<ActionType, ?>, State> store;
-
     private Editor mEditor;
 
     public MainLayout(Context c) {
         super(c);
-        store = MainActivity.store;
     }
 
     public void view() {
-        if (store.getState().presentationMode()) {
+        if (App.getState().presentationMode()) {
             presentation();
         } else {
             editor();
@@ -47,21 +47,20 @@ public class MainLayout extends RenderableView {
 
             v(Editor.class, () -> {
                 size(FILL, FILL);
-                text(store.getState().text());
+                text(App.getState().text());
                 textColor(Color.BLACK);
                 typeface(Typeface.create("sans-serif-light", 0));
                 gravity(TOP | START);
                 backgroundDrawable(null);
                 init(() -> {
                     mEditor = Anvil.currentView();
-                    mEditor.setOnSelectionChangedListener(pos -> {
-                        store.dispatch(new Action<>(ActionType.SET_PAGE, Slide.page(store.getState().text(), pos)));
-                    });
+                    mEditor.setOnSelectionChangedListener(pos ->
+                            App.dispatch(new Action<>(ActionType.SET_PAGE, Slide.page(App.getState().text(), pos))));
                 });
                 onTextChanged(chars -> {
                     String s = chars.toString();
-                    store.dispatch(new Action<>(ActionType.SET_TEXT, s));
-                    store.dispatch(new Action<>(ActionType.SET_PAGE, Slide.page(s, mEditor.getSelectionStart())));
+                    App.dispatch(new Action<>(ActionType.SET_TEXT, s));
+                    App.dispatch(new Action<>(ActionType.SET_PAGE, Slide.page(s, mEditor.getSelectionStart())));
                 });
             });
 
@@ -70,9 +69,7 @@ public class MainLayout extends RenderableView {
                 alignParentEnd();
                 alignParentBottom();
                 margin(dip(12));
-                onClick(v -> {
-                    store.dispatch(new Action<>(ActionType.OPEN_PRESENTATION));
-                });
+                onClick(v -> App.dispatch(new Action<>(ActionType.OPEN_PRESENTATION)));
                 Anvil.currentView().invalidate();
             });
         });
@@ -81,7 +78,7 @@ public class MainLayout extends RenderableView {
     private void presentation() {
         relativeLayout(() -> {
             size(FILL, FILL);
-            backgroundColor(store.getState().backgroundColor());
+            backgroundColor(App.getState().backgroundColor());
 
             v(Preview.class, () -> {
                 size(FILL, WRAP);
@@ -94,17 +91,17 @@ public class MainLayout extends RenderableView {
                 v(View.class, () -> {
                     size(0, FILL);
                     weight(1f);
-                    onClick(v -> { store.dispatch(new Action<>(ActionType.PREV_PAGE)); });
+                    onClick(v -> App.dispatch(new Action<>(ActionType.PREV_PAGE)));
                 });
                 v(View.class, () -> {
                     size(0, FILL);
                     weight(1f);
-                    onClick(v -> { store.dispatch(new Action<>(ActionType.TOGGLE_TOOLBAR)); });
+                    onClick(v -> App.dispatch(new Action<>(ActionType.TOGGLE_TOOLBAR)));
                 });
                 v(View.class, () -> {
                     size(0, FILL);
                     weight(1f);
-                    onClick(v -> { store.dispatch(new Action<>(ActionType.NEXT_PAGE)); });
+                    onClick(v -> App.dispatch(new Action<>(ActionType.NEXT_PAGE)));
                 });
             });
 
@@ -113,29 +110,31 @@ public class MainLayout extends RenderableView {
                 margin(0, 0, 0, dip(12));
                 alignParentBottom();
                 centerHorizontal();
-                visibility(store.getState().toolbarShown());
+                visibility(App.getState().toolbarShown());
 
-                button(() -> {
-                    text("X");
-                    onClick(v -> {
-                        store.dispatch(new Action<>(ActionType.CLOSE_PRESENTATION));
-                    });
+                imageButton(() -> {
+                    imageResource(R.drawable.ic_exit_to_app_24dp);
+                    onClick(v -> App.dispatch(new Action<>(ActionType.CLOSE_PRESENTATION)));
                 });
-                button(() -> {
-                    text("C");
+                imageButton(() -> {
+                    imageResource(R.drawable.ic_color_lens_24dp);
                     onClick(v -> {
                         for (int i = 0; i < COLOR_SCHEMES.length; i++) {
-                            if (COLOR_SCHEMES[i][0] == store.getState().foregroundColor() &&
-                                    COLOR_SCHEMES[i][1] == store.getState().backgroundColor()) {
+                            if (COLOR_SCHEMES[i][0] == App.getState().foregroundColor() &&
+                                    COLOR_SCHEMES[i][1] == App.getState().backgroundColor()) {
                                 i = (i + 1) % COLOR_SCHEMES.length;
-                                store.dispatch(new Action<>(ActionType.SET_FOREGROUND, COLOR_SCHEMES[i][0]));
-                                store.dispatch(new Action<>(ActionType.SET_BACKGROUND, COLOR_SCHEMES[i][1]));
+                                App.dispatch(new Action<>(ActionType.SET_FOREGROUND, COLOR_SCHEMES[i][0]));
+                                App.dispatch(new Action<>(ActionType.SET_BACKGROUND, COLOR_SCHEMES[i][1]));
                                 return;
                             }
                         }
-                        store.dispatch(new Action<>(ActionType.SET_FOREGROUND, COLOR_SCHEMES[0][0]));
-                        store.dispatch(new Action<>(ActionType.SET_BACKGROUND, COLOR_SCHEMES[0][1]));
+                        App.dispatch(new Action<>(ActionType.SET_FOREGROUND, COLOR_SCHEMES[0][0]));
+                        App.dispatch(new Action<>(ActionType.SET_BACKGROUND, COLOR_SCHEMES[0][1]));
                     });
+                });
+                imageButton(() -> {
+                    imageResource(R.drawable.ic_archive_24dp);
+                    onClick(v -> App.dispatch(new Action<>(ActionType.SHARE)));
                 });
             });
         });
