@@ -12,10 +12,19 @@ public class Style {
     public final static String SLIDE_FONT = "sans-serif-light";
 
     public final static int COLOR_SCHEMES[][] = {
-            {0xffffffff, 0xff000000, R.drawable.light_round_button, 0xff333333},
-            {0xff000000, 0xffffffff, R.drawable.dark_round_button, 0xffeeeeee},
-            {0xff03a9f4, 0xff000000, R.drawable.light_round_button, 0xff333333},
-            {0xffecf0f1, 0xff34495e, R.drawable.light_round_button, 0xff333333},
+        {0xff000000, 0xffffffff, R.drawable.dark_round_button, 0xffeeeeee},    // black on white
+        {0xff333333, 0xffeeeeee, R.drawable.dark_round_button, 0xffeeeeee},    // dark gray on white
+        {0xfffefefe, 0xff333333, R.drawable.light_round_button, 0xff333333},    // white on dark gray
+        {0xffffffff, 0xffe91e63, R.drawable.light_round_button, 0xff333333},    // white on pink 
+        {0xffffffff, 0xffe51c23, R.drawable.light_round_button, 0xff333333},    // white on red 
+        {0xffffffff, 0xff75507b, R.drawable.light_round_button, 0xff333333},    // white on plum 
+        {0xffffffff, 0xff3f51b5, R.drawable.light_round_button, 0xff333333},    // white on indigo 
+        {0xff333333, 0xff00bcd4, R.drawable.dark_round_button, 0xffeeeeee},    // black on cyan 
+        {0xffffffff, 0xff009688, R.drawable.light_round_button, 0xff333333},    // white on teal 
+        {0xff222222, 0xff8bc34a, R.drawable.dark_round_button, 0xffeeeeee},    // black on light green 
+        {0xff333333, 0xffcddc39, R.drawable.dark_round_button, 0xffeeeeee},    // black on lime
+        {0xff222222, 0xffffeb3b, R.drawable.dark_round_button, 0xffeeeeee},    // black on yellow 
+        {0xffffffff, 0xffff5722, R.drawable.light_round_button, 0xff333333},    // white on deep orange
     };
 
     private final static String[] ICONS = { "\ue879", "\ue40a", "\ue149" };
