@@ -12,7 +12,6 @@ public enum ActionType {
     NEXT_PAGE,
     PREV_PAGE,
 
-    SET_BACKGROUND,
-    SET_FOREGROUND,
+    SET_COLOR_SCHEME,
     SHARE
 }

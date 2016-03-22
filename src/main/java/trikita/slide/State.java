@@ -16,8 +16,7 @@ public interface State {
     boolean presentationMode();
     boolean toolbarShown();
 
-    int backgroundColor();
-    int foregroundColor();
+    int colorScheme();
 
     class Reducer implements Store.Reducer<Action<ActionType, ?>, State> {
         public State reduce(Action<ActionType, ?> a, State s) {
@@ -38,10 +37,8 @@ public interface State {
                     return ImmutableState.copyOf(s).withPresentationMode(false);
                 case TOGGLE_TOOLBAR:
                     return ImmutableState.copyOf(s).withToolbarShown(!s.toolbarShown());
-                case SET_BACKGROUND:
-                    return ImmutableState.copyOf(s).withBackgroundColor((Integer) a.value);
-                case SET_FOREGROUND:
-                    return ImmutableState.copyOf(s).withForegroundColor((Integer) a.value);
+                case SET_COLOR_SCHEME:
+                    return ImmutableState.copyOf(s).withColorScheme((Integer) a.value);
             }
             return s;
         }
@@ -52,8 +49,7 @@ public interface State {
             return ImmutableState.builder()
                     .text("")
                     .page(0)
-                    .foregroundColor(MainLayout.COLOR_SCHEMES[0][0])
-                    .backgroundColor(MainLayout.COLOR_SCHEMES[0][1])
+                    .colorScheme(0)
                     .presentationMode(false)
                     .toolbarShown(true)
                     .build();
