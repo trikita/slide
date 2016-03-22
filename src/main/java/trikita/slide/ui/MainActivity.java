@@ -17,6 +17,14 @@ public class MainActivity extends Activity {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (App.getState().presentationMode()) {
+            App.dispatch(new Action<>(ActionType.OPEN_PRESENTATION));
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         App.getWindowController().setWindow(null);
         super.onDestroy();

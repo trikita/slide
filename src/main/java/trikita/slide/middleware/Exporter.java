@@ -34,7 +34,6 @@ public class Exporter implements Store.Middleware<Action<ActionType, ?>, State> 
     @Override
     public void dispatch(Store<Action<ActionType, ?>, State> store, Action<ActionType, ?> action, Store.NextDispatcher<Action<ActionType, ?>> next) {
         if (action.type == ActionType.SHARE) {
-            System.out.println("SHARE ");
             File f = savePdf(store, "slide.pdf");
             if (f != null) {
                 if (!sharePdf(f)) {
