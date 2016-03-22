@@ -21,6 +21,7 @@ import trikita.slide.ActionType;
 import trikita.slide.App;
 import trikita.slide.Slide;
 import trikita.slide.State;
+import trikita.slide.ui.Style;
 
 public class Exporter implements Store.Middleware<Action<ActionType, ?>, State> {
 
@@ -71,9 +72,12 @@ public class Exporter implements Store.Middleware<Action<ActionType, ?>, State> 
                 System.out.println("render: " + text);
 
                 PdfDocument.Page page = document.startPage(pageInfo);
-                page.getCanvas().drawColor(store.getState().backgroundColor());
-                Slide.renderPage(text, page.getCanvas(), "sans-serif-light", App.getState().foregroundColor(),
-                        App.getState().backgroundColor());
+                page.getCanvas().drawColor(Style.COLOR_SCHEMES[store.getState().colorScheme()][1]);
+                Slide.renderPage(text,
+                        page.getCanvas(),
+                        Style.SLIDE_FONT,
+                        Style.COLOR_SCHEMES[App.getState().colorScheme()][0],
+                        Style.COLOR_SCHEMES[App.getState().colorScheme()][1]);
                 document.finishPage(page);
             }
 

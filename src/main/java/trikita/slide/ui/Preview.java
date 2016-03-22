@@ -26,7 +26,11 @@ public class Preview extends View {
     }
 
     protected void onDraw(Canvas canvas) {
-        String text = Slide.pageText(App.getState().text(), App.getState().page());//.trim();
-        Slide.renderPage(text, canvas, "sans-serif-light", App.getState().foregroundColor(), App.getState().backgroundColor());
+        String text = Slide.pageText(App.getState().text(), App.getState().page());
+        Slide.renderPage(text,
+                canvas,
+                Style.SLIDE_FONT,
+                Style.COLOR_SCHEMES[App.getState().colorScheme()][0],
+                Style.COLOR_SCHEMES[App.getState().colorScheme()][1]);
     }
 }

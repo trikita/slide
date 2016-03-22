@@ -9,6 +9,7 @@ import trikita.jedux.Store;
 import trikita.slide.ActionType;
 import trikita.slide.App;
 import trikita.slide.State;
+import trikita.slide.ui.Style;
 
 public class WindowController implements Store.Middleware<Action<ActionType, ?>, State> {
     private Window mWindow;
@@ -16,7 +17,7 @@ public class WindowController implements Store.Middleware<Action<ActionType, ?>,
     public void setWindow(Window w) {
         mWindow = w;
         if (w != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            w.setStatusBarColor(App.getState().backgroundColor());
+            w.setStatusBarColor(Style.COLOR_SCHEMES[App.getState().colorScheme()][1]);
         }
     }
 
@@ -26,9 +27,9 @@ public class WindowController implements Store.Middleware<Action<ActionType, ?>,
         next.dispatch(action);
         if (mWindow != null) {
             switch (action.type) {
-                case SET_BACKGROUND:
+                case SET_COLOR_SCHEME:
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        mWindow.setStatusBarColor(store.getState().backgroundColor());
+                        mWindow.setStatusBarColor(Style.COLOR_SCHEMES[store.getState().colorScheme()][1]);
                     }
                     break;
                 case OPEN_PRESENTATION:
