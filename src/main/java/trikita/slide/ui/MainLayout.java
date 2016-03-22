@@ -112,12 +112,18 @@ public class MainLayout extends RenderableView {
                 centerHorizontal();
                 visibility(App.getState().toolbarShown());
 
-                imageButton(() -> {
-                    imageResource(R.drawable.ic_exit_to_app_24dp);
+                button(() -> {
+                    text("\ue879");
+                    textSize(sip(30));
+                    textColor(0xff333333);
+                    typeface("MaterialIcons-Regular.ttf");
                     onClick(v -> App.dispatch(new Action<>(ActionType.CLOSE_PRESENTATION)));
                 });
-                imageButton(() -> {
-                    imageResource(R.drawable.ic_color_lens_24dp);
+                button(() -> {
+                    text("\ue40a");
+                    textSize(sip(30));
+                    textColor(0xff333333);
+                    typeface("MaterialIcons-Regular.ttf");
                     onClick(v -> {
                         for (int i = 0; i < COLOR_SCHEMES.length; i++) {
                             if (COLOR_SCHEMES[i][0] == App.getState().foregroundColor() &&
@@ -132,8 +138,11 @@ public class MainLayout extends RenderableView {
                         App.dispatch(new Action<>(ActionType.SET_BACKGROUND, COLOR_SCHEMES[0][1]));
                     });
                 });
-                imageButton(() -> {
-                    imageResource(R.drawable.ic_archive_24dp);
+                button(() -> {
+                    text("\ue149");
+                    textSize(sip(30));
+                    textColor(0xff333333);
+                    typeface("MaterialIcons-Regular.ttf");
                     onClick(v -> App.dispatch(new Action<>(ActionType.SHARE)));
                 });
             });
