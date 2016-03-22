@@ -8,6 +8,7 @@ import trikita.jedux.Action;
 import trikita.slide.ActionType;
 import trikita.slide.App;
 import trikita.slide.Slide;
+import trikita.slide.R;
 
 import static trikita.anvil.DSL.*;
 
@@ -52,13 +53,14 @@ public class MainLayout extends RenderableView {
                 });
             });
 
-            v(Preview.class, () -> {
-                Style.Editor.previewSize();
-                alignParentEnd();
-                alignParentBottom();
-                margin(dip(12));
-                onClick(v -> App.dispatch(new Action<>(ActionType.OPEN_PRESENTATION)));
-                Anvil.currentView().invalidate();
+            frameLayout(() -> {
+                Style.Editor.previewContainer();
+
+                v(Preview.class, () -> {
+                    Style.Editor.previewSize();
+                    onClick(v -> App.dispatch(new Action<>(ActionType.OPEN_PRESENTATION)));
+                    Anvil.currentView().invalidate();
+                });
             });
         });
     }

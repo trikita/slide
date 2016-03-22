@@ -36,6 +36,15 @@ public class Style {
         public static void previewSize() {
             size(dip(144), WRAP);
         }
+
+        public static void previewContainer() {
+            size(WRAP, WRAP);
+            alignParentEnd();
+            alignParentBottom();
+            margin(dip(12));
+            padding(dip(1), dip(1), dip(2), dip(2));
+            backgroundResource(R.drawable.preview_bg);
+        }
     }
 
     public static class Preview {
