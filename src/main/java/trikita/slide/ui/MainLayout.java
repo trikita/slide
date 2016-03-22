@@ -1,28 +1,20 @@
 package trikita.slide.ui;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.view.View;
 
 import trikita.anvil.Anvil;
 import trikita.anvil.RenderableView;
 import trikita.jedux.Action;
 import trikita.slide.ActionType;
 import trikita.slide.App;
-import trikita.slide.R;
 import trikita.slide.Slide;
 
 import static trikita.anvil.DSL.*;
 
 public class MainLayout extends RenderableView {
-
-    public final static int COLOR_SCHEMES[][] = {
-            {0xffffffff, 0xff000000},
-            {0xff000000, 0xffffffff},
-            {0xff03a9f4, 0xff000000},
-            {0xffecf0f1, 0xff34495e},
-    };
+    private final static int CLOSE_BUTTON = 0;
+    private final static int PALETTE_BUTTON = 1;
+    private final static int SHARE_BUTTON = 2;
 
     private Editor mEditor;
 
@@ -40,17 +32,13 @@ public class MainLayout extends RenderableView {
 
     private void editor() {
         relativeLayout(() -> {
-            size(FILL, FILL);
-            fitsSystemWindows(true);
-            padding(dip(8));
-            backgroundColor(Color.WHITE);
+            Style.Editor.background();
 
             v(Editor.class, () -> {
                 size(FILL, FILL);
-                text(App.getState().text());
-                textColor(Color.BLACK);
-                typeface(Typeface.create("sans-serif-light", 0));
                 gravity(TOP | START);
+                text(App.getState().text());
+                Style.Editor.textStyle();
                 backgroundDrawable(null);
                 init(() -> {
                     mEditor = Anvil.currentView();
@@ -65,7 +53,7 @@ public class MainLayout extends RenderableView {
             });
 
             v(Preview.class, () -> {
-                size(dip(144), WRAP);
+                Style.Editor.previewSize();
                 alignParentEnd();
                 alignParentBottom();
                 margin(dip(12));
@@ -78,7 +66,7 @@ public class MainLayout extends RenderableView {
     private void presentation() {
         relativeLayout(() -> {
             size(FILL, FILL);
-            backgroundColor(App.getState().backgroundColor());
+            Style.Preview.background(App.getState().colorScheme());
 
             v(Preview.class, () -> {
                 size(FILL, WRAP);
@@ -88,61 +76,31 @@ public class MainLayout extends RenderableView {
 
             linearLayout(() -> {
                 size(FILL, FILL);
-                v(View.class, () -> {
-                    size(0, FILL);
-                    weight(1f);
-                    onClick(v -> App.dispatch(new Action<>(ActionType.PREV_PAGE)));
-                });
-                v(View.class, () -> {
-                    size(0, FILL);
-                    weight(1f);
-                    onClick(v -> App.dispatch(new Action<>(ActionType.TOGGLE_TOOLBAR)));
-                });
-                v(View.class, () -> {
-                    size(0, FILL);
-                    weight(1f);
-                    onClick(v -> App.dispatch(new Action<>(ActionType.NEXT_PAGE)));
-                });
+
+                Style.Preview.touchPlaceholder(v -> App.dispatch(new Action<>(ActionType.PREV_PAGE)));
+                Style.Preview.touchPlaceholder(v -> App.dispatch(new Action<>(ActionType.TOGGLE_TOOLBAR)));
+                Style.Preview.touchPlaceholder(v -> App.dispatch(new Action<>(ActionType.NEXT_PAGE)));
             });
 
             linearLayout(() -> {
-                size(WRAP, dip(48));
-                margin(0, 0, 0, dip(12));
+                size(WRAP, WRAP);
+                margin(0, 0, 0, dip(25));
                 alignParentBottom();
                 centerHorizontal();
                 visibility(App.getState().toolbarShown());
 
                 button(() -> {
-                    text("\ue879");
-                    textSize(sip(30));
-                    textColor(0xff333333);
-                    typeface("MaterialIcons-Regular.ttf");
+                    Style.Preview.button(CLOSE_BUTTON, App.getState().colorScheme());
                     onClick(v -> App.dispatch(new Action<>(ActionType.CLOSE_PRESENTATION)));
                 });
                 button(() -> {
-                    text("\ue40a");
-                    textSize(sip(30));
-                    textColor(0xff333333);
-                    typeface("MaterialIcons-Regular.ttf");
-                    onClick(v -> {
-                        for (int i = 0; i < COLOR_SCHEMES.length; i++) {
-                            if (COLOR_SCHEMES[i][0] == App.getState().foregroundColor() &&
-                                    COLOR_SCHEMES[i][1] == App.getState().backgroundColor()) {
-                                i = (i + 1) % COLOR_SCHEMES.length;
-                                App.dispatch(new Action<>(ActionType.SET_FOREGROUND, COLOR_SCHEMES[i][0]));
-                                App.dispatch(new Action<>(ActionType.SET_BACKGROUND, COLOR_SCHEMES[i][1]));
-                                return;
-                            }
-                        }
-                        App.dispatch(new Action<>(ActionType.SET_FOREGROUND, COLOR_SCHEMES[0][0]));
-                        App.dispatch(new Action<>(ActionType.SET_BACKGROUND, COLOR_SCHEMES[0][1]));
-                    });
+                    Style.Preview.button(PALETTE_BUTTON, App.getState().colorScheme());
+                    onClick(v -> App.dispatch(new Action<>(
+                                ActionType.SET_COLOR_SCHEME,
+                                (App.getState().colorScheme() + 1) % Style.COLOR_SCHEMES.length)));
                 });
                 button(() -> {
-                    text("\ue149");
-                    textSize(sip(30));
-                    textColor(0xff333333);
-                    typeface("MaterialIcons-Regular.ttf");
+                    Style.Preview.button(SHARE_BUTTON, App.getState().colorScheme());
                     onClick(v -> App.dispatch(new Action<>(ActionType.SHARE)));
                 });
             });
