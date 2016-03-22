@@ -3,48 +3,41 @@ package trikita.slide.middleware;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.IOException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import trikita.jedux.Action;
 import trikita.jedux.Store;
 import trikita.slide.ActionType;
+import trikita.slide.GsonAdaptersState;
 import trikita.slide.ImmutableState;
 import trikita.slide.State;
 
 public class PersistanceController implements Store.Middleware<Action<ActionType, ?>, State> {
 
-    private final ObjectMapper mObjectMapper;
     private final SharedPreferences mPreferences;
+    private final Gson mGson;
 
     public PersistanceController(Context c) {
         mPreferences = c.getSharedPreferences("data", 0);
-        mObjectMapper = new ObjectMapper();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapterFactory(new GsonAdaptersState());
+        mGson = gsonBuilder.create();
     }
 
     public State getSavedState() {
         if (mPreferences.contains("data")) {
             String json = mPreferences.getString("data", "");
-            try {
-                return mObjectMapper.readValue(json, ImmutableState.class);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            return mGson.fromJson(json, ImmutableState.class);
         }
         return null;
     }
 
     @Override
     public void dispatch(Store<Action<ActionType, ?>, State> store, Action<ActionType, ?> action,
-                         Store.NextDispatcher<Action<ActionType, ?>> next) {
+            Store.NextDispatcher<Action<ActionType, ?>> next) {
         next.dispatch(action);
-        try {
-            String json = mObjectMapper.writeValueAsString(store.getState());
-            mPreferences.edit().putString("data", json).apply();
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+        String json = mGson.toJson(store.getState());
+        mPreferences.edit().putString("data", json).apply();
     }
 }

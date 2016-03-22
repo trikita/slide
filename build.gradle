@@ -5,12 +5,12 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:1.5.0'
         classpath 'me.tatarka:gradle-retrolambda:3.2.5'
-        classpath "com.neenbedankt.gradle.plugins:android-apt:1.6"
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.6'
     }
 }
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
-apply plugin: "android-apt"
+apply plugin: 'android-apt'
 
 android {
     compileSdkVersion 'android-23'
@@ -32,34 +32,19 @@ android {
             proguardFile getDefaultProguardFile('proguard-android.txt')
         }
     }
-
-    packagingOptions {
-        exclude 'META-INF/DEPENDENCIES.txt'
-        exclude 'META-INF/DEPENDENCIES'
-        exclude 'META-INF/dependencies.txt'
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/license.txt'
-        exclude 'META-INF/LGPL2.1'
-        exclude 'META-INF/NOTICE.txt'
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/notice.txt'
-    }
 }
 
 repositories {
     mavenLocal()
     jcenter()
-    maven { url = "https://jitpack.io/" }
+    maven { url = 'https://jitpack.io/' }
 }
 
 dependencies {
-    compile 'co.trikita:anvil-sdk19:0.3.0'
+    compile 'co.trikita:anvil-sdk19:0.3.1'
     compile 'com.github.trikita:jedux:-SNAPSHOT'
 
-    compile 'com.fasterxml.jackson.core:jackson-core:2.4.1'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.4.1'
-
-    apt "org.immutables:value:2.1.14"
-    provided "org.immutables:value:2.1.14"
+    compile 'org.immutables:gson:2.1.14'
+    apt 'org.immutables:value:2.1.14'
+    provided 'org.immutables:value:2.1.14'
 }

@@ -1,8 +1,6 @@
 package trikita.slide;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
+import org.immutables.gson.Gson;
 import org.immutables.value.Value;
 
 import trikita.jedux.Action;
@@ -10,8 +8,7 @@ import trikita.jedux.Store;
 import trikita.slide.ui.MainLayout;
 
 @Value.Immutable
-@JsonSerialize(as = ImmutableState.class)
-@JsonDeserialize(as = ImmutableState.class)
+@Gson.TypeAdapters
 public interface State {
     String text();
     int page();
