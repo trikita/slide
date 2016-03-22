@@ -6,6 +6,7 @@ import org.immutables.value.Value;
 import trikita.jedux.Action;
 import trikita.jedux.Store;
 import trikita.slide.ui.MainLayout;
+import android.content.Context;
 
 @Value.Immutable
 @Gson.TypeAdapters
@@ -45,9 +46,9 @@ public interface State {
     }
 
     class Default {
-        public static State build() {
+        public static State build(Context c) {
             return ImmutableState.builder()
-                    .text("")
+                    .text(c.getString(R.string.tutorial_text))
                     .page(0)
                     .colorScheme(0)
                     .presentationMode(false)

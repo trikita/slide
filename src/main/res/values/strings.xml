@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Slide</string>
+
+    <string name="tutorial_text">SLIDE\n\nEach paragraph\nis a slide\n\nThis is a slide\n.\nwith a blank line\n\nTap on the preview\nto start the presentation.\nYou may also pick\na color scheme there.\n\nDone!\n\nDon\'t forget to export\nto PDF and share.</string>
 </resources>

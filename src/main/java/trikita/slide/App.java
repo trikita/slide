@@ -26,7 +26,7 @@ public class App extends Application {
         PersistanceController persistanceController = new PersistanceController(this);
         State initialState = persistanceController.getSavedState();
         if (initialState == null) {
-            initialState = State.Default.build();
+            initialState = State.Default.build(this);
         }
 
         this.store = new Store<>(new State.Reducer(),
