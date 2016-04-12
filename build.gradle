@@ -32,6 +32,10 @@ android {
             proguardFile getDefaultProguardFile('proguard-android.txt')
         }
     }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 repositories {
@@ -43,6 +47,7 @@ repositories {
 dependencies {
     compile 'co.trikita:anvil-sdk19:0.3.1'
     compile 'com.github.trikita:jedux:-SNAPSHOT'
+    compile 'com.github.trikita:promote:-SNAPSHOT'
 
     compile 'org.immutables:gson:2.1.14'
     apt 'org.immutables:value:2.1.14'
