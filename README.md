@@ -1,8 +1,9 @@
 # slide
 
-Minimal presentation tool for Android, perfect for using [Takahashi][1] method.
+Minimal presentation tool for Android, perfect for using [Takahashi](https://en.wikipedia.org/wiki/Takahashi_method) method.
 
-![Editor](editor.png) ![Preview](preview.png)
+<img alt="Editor" src="editor.png" width="40%" />
+<img alt="Preview" src="preview.png" width="40%" />
 
 Uses:
 
@@ -11,5 +12,3 @@ Uses:
 * [Immutables](http://immutables.github.io) for immutable Redux state
 * Material Icons TTF font
 * Standard Andorid API to render PDF slides
-
-1: https://en.wikipedia.org/wiki/Takahashi_method
