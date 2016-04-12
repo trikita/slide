@@ -1,4 +1,4 @@
-# slide
+# Slide
 
 <div>
 <img align="left" src="https://raw.githubusercontent.com/trikita/slide/master/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="logo" width="96px" height="96px" />
@@ -18,7 +18,7 @@ The method is designed for the people who are not good at presentations and who 
 <img alt="Editor" src="editor.png" width="40%" />
 <img alt="Preview" src="preview.png" width="40%" />
 
-Uses:
+Using:
 
 * [Jedux](https://github.com/trikita/jedux) for Redux architecture
 * [Anvil](https://github.com/zserge/anvil) for reactive views
