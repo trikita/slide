@@ -1,5 +1,6 @@
 package trikita.slide.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.widget.PopupMenu;
@@ -129,6 +130,7 @@ public class MainLayout extends RenderableView {
             } else if (item.getItemId() == R.id.menu_style) {
             } else if (item.getItemId() == R.id.menu_settings) {
             } else if (item.getItemId() == R.id.menu_export_pdf) {
+                App.dispatch(new Action<>(ActionType.CREATE_PDF, (Activity) v.getContext()));
             }
             return true;
         });
