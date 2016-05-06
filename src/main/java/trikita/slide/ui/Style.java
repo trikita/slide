@@ -2,6 +2,7 @@ package trikita.slide.ui;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.view.Gravity;
 import android.view.View;
 
 import static trikita.anvil.DSL.*;
@@ -53,6 +54,18 @@ public class Style {
             margin(dip(12));
             padding(dip(1), dip(1), dip(2), dip(2));
             backgroundResource(R.drawable.preview_bg);
+        }
+
+        public static void menuButton() {
+            size(dip(32), dip(32));
+            alignParentEnd();
+            alignParentTop();
+            margin(dip(12));
+            gravity(Gravity.CENTER);
+            text("\ue5d4");
+            typeface("MaterialIcons-Regular.ttf");
+            textSize(sip(26));
+            textColor(0xcc555555);
         }
     }
 

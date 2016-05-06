@@ -1,6 +1,8 @@
 package trikita.slide.ui;
 
 import android.content.Context;
+import android.view.View;
+import android.widget.PopupMenu;
 
 import trikita.anvil.Anvil;
 import trikita.anvil.RenderableView;
@@ -54,6 +56,11 @@ public class MainLayout extends RenderableView {
                     s = s.substring(0, mEditor.getSelectionStart());
                     App.dispatch(new Action<>(ActionType.SET_PAGE, Slide.parse(s).size()-1));
                 });
+            });
+
+            textView(() -> {
+                Style.Editor.menuButton();
+                onClick(this::onOpenMenu);
             });
 
             frameLayout(() -> {
@@ -110,5 +117,20 @@ public class MainLayout extends RenderableView {
                 });
             });
         });
+    }
+
+    private void onOpenMenu(View v) {
+        PopupMenu menu = new PopupMenu(v.getContext(), v);
+        menu.getMenuInflater().inflate(R.menu.overflow_popup, menu.getMenu());
+        menu.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.menu_open) {
+            } else if (item.getItemId() == R.id.menu_insert_image) {
+            } else if (item.getItemId() == R.id.menu_style) {
+            } else if (item.getItemId() == R.id.menu_settings) {
+            } else if (item.getItemId() == R.id.menu_export_pdf) {
+            }
+            return true;
+        });
+        menu.show();
     }
 }
