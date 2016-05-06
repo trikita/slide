@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_open"
+        android:title="@string/om_open"/>
+    <item
+        android:id="@+id/menu_insert_image"
+        android:title="@string/om_insert_image"/>
+    <item
+        android:id="@+id/menu_style"
+        android:title="@string/om_style"/>
+    <item
+        android:id="@+id/menu_settings"
+        android:title="@string/om_settings"/>
+    <item
+        android:id="@+id/menu_export_pdf"
+        android:title="@string/om_export_pdf"/>
+</menu>
+
