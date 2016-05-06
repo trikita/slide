@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.view.View;
 
+import java.util.List;
+
 import trikita.slide.App;
 import trikita.slide.Slide;
 
@@ -26,10 +28,15 @@ public class Preview extends View {
     }
 
     protected void onDraw(Canvas canvas) {
-        App.getState().slides().get(App.getState().page()).render(getContext(),
-                canvas,
-                Style.SLIDE_FONT,
-                Style.COLOR_SCHEMES[App.getState().colorScheme()][0],
-                Style.COLOR_SCHEMES[App.getState().colorScheme()][1]);
+        List<Slide> slides = App.getState().slides();
+        int page = App.getState().page();
+        if (page >= 0 && page < slides.size()) {
+            slides.get(page).render(getContext(), canvas,
+                    Style.SLIDE_FONT,
+                    Style.COLOR_SCHEMES[App.getState().colorScheme()][0],
+                    Style.COLOR_SCHEMES[App.getState().colorScheme()][1]);
+        } else {
+            canvas.drawColor(Style.COLOR_SCHEMES[App.getState().colorScheme()][1]);
+        }
     }
 }

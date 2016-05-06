@@ -112,6 +112,9 @@ public class Slide {
                 text.append('\n');
             }
         }
+        if (text.length() > 0 && text.charAt(text.length() - 1) == '\n') {
+            text.delete(text.length() - 1, text.length());
+        }
     }
 
     private static class CacheTarget implements Target {
