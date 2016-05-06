@@ -65,19 +65,16 @@ public class Exporter implements Store.Middleware<Action<ActionType, ?>, State> 
         try {
             PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(640, 640 * 9 / 16, 1).create();
 
-            String fullText = store.getState().text();
-            for (int i = 0; i < Slide.paginate(fullText).length; i++) {
-                String text = Slide.pageText(fullText, i);
-                System.out.println("render: " + text);
-
+            for (Slide slide : store.getState().slides()) {
                 PdfDocument.Page page = document.startPage(pageInfo);
                 page.getCanvas().drawColor(Style.COLOR_SCHEMES[store.getState().colorScheme()][1]);
-                Slide.renderPage(text,
+                slide.render(mContext,
                         page.getCanvas(),
                         Style.SLIDE_FONT,
                         Style.COLOR_SCHEMES[App.getState().colorScheme()][0],
                         Style.COLOR_SCHEMES[App.getState().colorScheme()][1]);
                 document.finishPage(page);
+
             }
 
             File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), filename);

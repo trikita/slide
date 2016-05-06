@@ -5,21 +5,28 @@ import org.immutables.value.Value;
 
 import trikita.jedux.Action;
 import trikita.jedux.Store;
-import trikita.slide.ui.MainLayout;
 import android.content.Context;
+
+import java.util.List;
 
 @Value.Immutable
 @Gson.TypeAdapters
-public interface State {
-    String text();
-    int page();
+public abstract class State {
 
-    boolean presentationMode();
-    boolean toolbarShown();
+    public abstract String text();
+    public abstract int page();
 
-    int colorScheme();
+    public abstract boolean presentationMode();
+    public abstract boolean toolbarShown();
 
-    class Reducer implements Store.Reducer<Action<ActionType, ?>, State> {
+    public abstract int colorScheme();
+
+    @Value.Lazy
+    public List<Slide> slides() {
+        return Slide.parse(text());
+    }
+
+    static class Reducer implements Store.Reducer<Action<ActionType, ?>, State> {
         public State reduce(Action<ActionType, ?> a, State s) {
             switch (a.type) {
                 case SET_TEXT:
@@ -28,7 +35,7 @@ public interface State {
                     return ImmutableState.copyOf(s).withPage((Integer) a.value);
                 case NEXT_PAGE:
                     return ImmutableState.copyOf(s)
-                            .withPage(Math.min(s.page()+1, Slide.paginate(s.text()).length-1));
+                            .withPage(Math.min(s.page()+1, s.slides().size()-1));
                 case PREV_PAGE:
                     return ImmutableState.copyOf(s)
                             .withPage(Math.max(s.page()-1, 0));
@@ -45,7 +52,7 @@ public interface State {
         }
     }
 
-    class Default {
+    static class Default {
         public static State build(Context c) {
             return ImmutableState.builder()
                     .text(c.getString(R.string.tutorial_text))
