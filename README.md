@@ -18,6 +18,33 @@ The method is designed for the people who are not good at presentations and who 
 <img alt="Editor" src="editor.png" width="40%" />
 <img alt="Preview" src="preview.png" width="40%" />
 
+## Syntax
+
+- [x] Each paragraph is a slide. Blank lines separate slides
+- [x] Text is rendered using the largest possible font size to fit the slide bounds
+- [x] Single-line text is centered, otherwise it's left-aligned
+- [x] Text surrounded with asterisks is rendered as bold (emphasized)
+- [ ] Line starting with hash sign is a header
+- [ ] Line starting with two or more spaces are rendered as code
+- [x] Line starging with "@" allow to insert images from the URL (web, dropbox, local device storage)
+- [x] Dot at the beginning of a line is ignored. It's helpful to "escape" blank lines or special symbols inside a slide.
+
+```
+This is
+a slide
+
+# Header
+@http://example.com/background.png
+This is *another* slide
+.
+with a blank line
+
+Code:
+  int main() {
+		return 0;
+	}
+```
+
 Using:
 
 * [Jedux](https://github.com/trikita/jedux) for Redux architecture
