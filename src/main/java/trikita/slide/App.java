@@ -31,7 +31,7 @@ public class App extends Application {
 
         this.store = new Store<>(new State.Reducer(),
                 initialState,
-                new Logger<>("Slide"),
+//                new Logger<>("Slide"),
                 persistanceController,
                 this.windowController,
                 new Exporter(this));

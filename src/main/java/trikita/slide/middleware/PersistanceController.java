@@ -28,7 +28,9 @@ public class PersistanceController implements Store.Middleware<Action<ActionType
     public State getSavedState() {
         if (mPreferences.contains("data")) {
             String json = mPreferences.getString("data", "");
-            return mGson.fromJson(json, ImmutableState.class);
+            try {
+                return mGson.fromJson(json, ImmutableState.class);
+            } catch (Exception unused) {}
         }
         return null;
     }
