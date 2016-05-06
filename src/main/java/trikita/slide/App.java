@@ -6,7 +6,7 @@ import trikita.anvil.Anvil;
 import trikita.jedux.Action;
 import trikita.jedux.Logger;
 import trikita.jedux.Store;
-import trikita.slide.middleware.Exporter;
+import trikita.slide.middleware.StorageController;
 import trikita.slide.middleware.PersistanceController;
 import trikita.slide.middleware.WindowController;
 
@@ -34,7 +34,7 @@ public class App extends Application {
 //                new Logger<>("Slide"),
                 persistanceController,
                 this.windowController,
-                new Exporter(this));
+                new StorageController(this));
 
         this.store.subscribe(Anvil::render);
     }

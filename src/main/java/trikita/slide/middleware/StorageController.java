@@ -24,12 +24,12 @@ import java.util.Calendar;
 import java.text.SimpleDateFormat;
 import java.text.DateFormat;
 
-public class Exporter implements Store.Middleware<Action<ActionType, ?>, State> {
+public class StorageController implements Store.Middleware<Action<ActionType, ?>, State> {
     public static final int WRITE_REQUEST_CODE = 43;
 
     private final Context mContext;
 
-    public Exporter(Context c) {
+    public StorageController(Context c) {
         mContext = c;
     }
 
