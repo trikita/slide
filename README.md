@@ -23,10 +23,12 @@ The method is designed for the people who are not good at presentations and who 
 - [x] Each paragraph is a slide. Blank lines separate slides
 - [x] Text is rendered using the largest possible font size to fit the slide bounds
 - [x] Single-line text is centered, otherwise it's left-aligned
-- [x] Text surrounded with asterisks is rendered as bold (emphasized)
-- [ ] Line starting with hash sign is a header
-- [ ] Line starting with two or more spaces are rendered as code
+- [x] Text surrounded with asterisks is rendered as bold (emphasized). Use `**` to render a normal asterisk sign
+- [x] Line starting with hash sign is a header
+- [x] Line starting with two spaces are rendered as code (monospace).
 - [x] Line starging with "@" allow to insert images from the URL (web, dropbox, local device storage)
+- [ ] Images may be scaled, e.g `@http://example.com/bg.png 30%`
+- [ ] Images may have certain gravity, e.g. `@http://example.com/logo.png top`
 - [x] Dot at the beginning of a line is ignored. It's helpful to "escape" blank lines or special symbols inside a slide.
 
 ```

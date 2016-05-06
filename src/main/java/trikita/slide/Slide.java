@@ -10,7 +10,9 @@ import android.text.Layout;
 import android.text.SpannableStringBuilder;
 import android.text.StaticLayout;
 import android.text.TextPaint;
+import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
+import android.text.style.TypefaceSpan;
 
 import com.squareup.picasso.Target;
 import com.squareup.picasso.Picasso;
@@ -26,43 +28,47 @@ public class Slide {
 
     private final List<String> backgrounds = new ArrayList<>();
     private final Map<String, CacheTarget> bitmaps = new HashMap<>();
-    private final List<String> lines = new ArrayList<>();
-    private final SpannableStringBuilder text;
+    private final SpannableStringBuilder text = new SpannableStringBuilder();
 
     private Slide(String s) {
-        StringBuilder sb = new StringBuilder();
+        int emSpanStart = -1;
         for (String line : s.split("\n")) {
             if (line.startsWith("@")) {
                 backgrounds.add(line.substring(1));
+            } else if (line.startsWith("#")) {
+                int start = text.length();
+                text.append(line.substring(1)).append('\n');
+                text.setSpan(new RelativeSizeSpan(1.6f), start, text.length(), 0);
+                text.setSpan(new StyleSpan(Typeface.BOLD), start, text.length(), 0);
+            } else if (line.startsWith("  ")) {
+                int start = text.length();
+                text.append(line.substring(2)).append('\n');
+                text.setSpan(new TypefaceSpan("monospace"), start, text.length(), 0);
             } else {
                 if (line.startsWith(".")) {
                     line = line.substring(1);
                 }
-                lines.add(line);
-                sb.append(line).append('\n');
+                // Handle emphasis
+                for (int i = 0; i < line.length(); i++) {
+                    char c = line.charAt(i);
+                    if (c == '*') {
+                        if (emSpanStart == -1) {
+                            emSpanStart = text.length();
+                        } else {
+                            if (emSpanStart != text.length()) {
+                                text.setSpan(new StyleSpan(Typeface.BOLD), emSpanStart, text.length(), 0);
+                            } else {
+                                text.append('*');
+                            }
+                            emSpanStart = -1;
+                        }
+                    } else {
+                        text.append(c);
+                    }
+                }
+                text.append('\n');
             }
         }
-        text = emphasize(new SpannableStringBuilder(sb.toString()));
-    }
-
-    private SpannableStringBuilder emphasize(SpannableStringBuilder text) {
-        int from = 0;
-        while (from < text.length()) {
-            int start = text.toString().indexOf("*", from);
-            int end = text.toString().indexOf("*", start + 1);
-            if (start == -1 || end == -1) {
-                break;
-            }
-            if (start < text.length() && Character.isSpaceChar(text.charAt(start + 1))) {
-                from = start + 1;
-            } else {
-                text.setSpan(new StyleSpan(Typeface.BOLD), start+1, end, 0);
-                text.delete(end, end+1);
-                text.delete(start, start+1);
-                from = end - 1;
-            }
-        }
-        return text;
     }
 
     private static class CacheTarget implements Target {
@@ -109,7 +115,7 @@ public class Slide {
         int w = (int) (canvas.getWidth() * (1 - margin * 2));
         int h = (int) (canvas.getHeight() * (1 - margin * 2));
 
-        for (int textSize = canvas.getHeight() / lines.size(); textSize > 1 ; textSize--) {
+        for (int textSize = canvas.getHeight(); textSize > 1 ; textSize--) {
             textPaint.setTextSize(textSize);
             if (StaticLayout.getDesiredWidth(text, textPaint) <= w) {
                 StaticLayout layout = new StaticLayout(text, textPaint, w, Layout.Alignment.ALIGN_NORMAL, 1, 0, false);
@@ -144,8 +150,7 @@ public class Slide {
         List<Slide> slides = new ArrayList<>();
         String[] paragraphs = s.split("(\n\\s*){2,}");
         for (String par : paragraphs) {
-            String text = par.trim().replaceAll("\n\\.", "\n");
-            slides.add(new Slide(text));
+            slides.add(new Slide(par));
         }
         return slides;
     }
