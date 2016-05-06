@@ -36,15 +36,14 @@ This is
 a slide
 
 # Header
-@http://example.com/background.png
-This is *another* slide
+@http://example.com/logo.png 20% left top
 .
-with a blank line
+This is *another* slide
 
 Code:
   int main() {
-		return 0;
-	}
+    return 0;
+  }
 ```
 
 Using:

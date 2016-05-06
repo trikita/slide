@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.Layout;
@@ -13,6 +14,7 @@ import android.text.TextPaint;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.text.style.TypefaceSpan;
+import android.view.Gravity;
 
 import com.squareup.picasso.Target;
 import com.squareup.picasso.Picasso;
@@ -26,7 +28,48 @@ import trikita.anvil.Anvil;
 
 public class Slide {
 
-    private final List<String> backgrounds = new ArrayList<>();
+    private static class Background {
+        private static final Map<String, Integer> GRAVITY = new HashMap<>();
+        static {
+            GRAVITY.put("left", Gravity.LEFT);
+            GRAVITY.put("top", Gravity.TOP);
+            GRAVITY.put("right", Gravity.RIGHT);
+            GRAVITY.put("bottom", Gravity.BOTTOM);
+            GRAVITY.put("center", Gravity.CENTER);
+            GRAVITY.put("w", Gravity.LEFT);
+            GRAVITY.put("n", Gravity.TOP);
+            GRAVITY.put("e", Gravity.RIGHT);
+            GRAVITY.put("s", Gravity.BOTTOM);
+            GRAVITY.put("nw", Gravity.LEFT | Gravity.TOP);
+            GRAVITY.put("sw", Gravity.LEFT | Gravity.BOTTOM);
+            GRAVITY.put("ne", Gravity.RIGHT | Gravity.TOP);
+            GRAVITY.put("se", Gravity.RIGHT | Gravity.BOTTOM);
+        }
+        private final String url;
+        private final float scale;
+        private final int gravity;
+        public Background(String bg) {
+            int g = Gravity.CENTER;
+            float scale = 1f;
+            String url = null;
+            for (String part : bg.split("\\s+")) {
+                if (part.endsWith("%")) {
+                    try {
+                        scale = Float.parseFloat(part.substring(0, part.length() - 1)) / 100;
+                    } catch (NumberFormatException ignored) {}
+                } else if (GRAVITY.containsKey(part)) {
+                    g = GRAVITY.get(part);
+                } else if (part.contains("://")){
+                    url = part;
+                }
+            }
+            this.url = url;
+            this.scale = scale;
+            this.gravity = g;
+        }
+    }
+
+    private final List<Background> backgrounds = new ArrayList<>();
     private final Map<String, CacheTarget> bitmaps = new HashMap<>();
     private final SpannableStringBuilder text = new SpannableStringBuilder();
 
@@ -34,7 +77,7 @@ public class Slide {
         int emSpanStart = -1;
         for (String line : s.split("\n")) {
             if (line.startsWith("@")) {
-                backgrounds.add(line.substring(1));
+                backgrounds.add(new Background(line.substring(1)));
             } else if (line.startsWith("#")) {
                 int start = text.length();
                 text.append(line.substring(1)).append('\n');
@@ -94,18 +137,21 @@ public class Slide {
         textPaint.setAntiAlias(true);
         textPaint.setTypeface(Typeface.create(typeface, 0));
 
-        for (String uri : backgrounds) {
-            if (uri.length() > 0) {
+        for (Background img: backgrounds) {
+            if (img.url != null) {
                 CacheTarget cacheTarget = new CacheTarget();
-                bitmaps.put(uri, cacheTarget);
+                bitmaps.put(img.url, cacheTarget);
                 Picasso.with(c)
-                        .load(uri)
-                        .resize(canvas.getWidth(), canvas.getHeight())
-                        .centerCrop()
+                        .load(img.url)
+                        .resize((int) (canvas.getWidth() * img.scale), (int) (canvas.getHeight() * img.scale))
+                        .centerInside()
                         .into(cacheTarget);
                 Bitmap b = cacheTarget.getCacheBitmap();
                 if (b != null) {
-                    canvas.drawBitmap(b, 0, 0, textPaint);
+                    Rect r = new Rect();
+                    Gravity.apply(img.gravity, b.getWidth(), b.getHeight(),
+                            new Rect(0, 0, canvas.getWidth(), canvas.getHeight()), r);
+                    canvas.drawBitmap(b, r.left, r.top, textPaint);
                 }
             }
         }
