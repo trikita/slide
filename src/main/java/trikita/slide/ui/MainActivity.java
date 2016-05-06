@@ -1,12 +1,15 @@
 package trikita.slide.ui;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import trikita.jedux.Action;
 import trikita.promote.Promote;
 import trikita.slide.ActionType;
 import trikita.slide.App;
+import trikita.slide.middleware.Exporter;
 
 public class MainActivity extends Activity {
 
@@ -42,6 +45,16 @@ public class MainActivity extends Activity {
             App.dispatch(new Action<>(ActionType.CLOSE_PRESENTATION));
         } else {
             super.onBackPressed();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Exporter.WRITE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                Uri uri = data.getData();
+                App.dispatch(new Action<>(ActionType.EXPORT_PDF, uri));
+            }
         }
     }
 }

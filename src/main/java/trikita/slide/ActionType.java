@@ -13,5 +13,8 @@ public enum ActionType {
     PREV_PAGE,
 
     SET_COLOR_SCHEME,
-    SHARE
+    SHARE,
+
+    CREATE_PDF,
+    EXPORT_PDF
 }

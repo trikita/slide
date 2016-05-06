@@ -3,6 +3,10 @@
     <string name="app_name">Slide</string>
 
     <string name="tutorial_text">SLIDE\n\nEach paragraph\nis a slide\n\nThis is a slide\n.\nwith a blank line\n\nTap on the preview\nto start the presentation.\nYou may also pick\na color scheme there.\n\nDone!\n\nDon\'t forget to export\nto PDF and share.</string>
+
+    <string name="pdf_name_prefix">Slide-</string>
+    <string name="failed_export_pdf">Failed to export to PDF</string>
+
     <string name="om_open">Open</string>
     <string name="om_insert_image">Insert image</string>
     <string name="om_style">Style</string>
