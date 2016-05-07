@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
             return;
         }
 
-        if (requestCode == StorageController.WRITE_REQUEST_CODE) {
+        if (requestCode == StorageController.EXPORT_PDF_REQUEST_CODE) {
             if (data != null) {
                 Uri uri = data.getData();
                 App.dispatch(new Action<>(ActionType.EXPORT_PDF, uri));

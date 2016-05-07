@@ -25,8 +25,8 @@ import java.text.SimpleDateFormat;
 import java.text.DateFormat;
 
 public class StorageController implements Store.Middleware<Action<ActionType, ?>, State> {
-    public static final int WRITE_REQUEST_CODE = 43;
     public static final int PICK_IMAGE_REQUEST_CODE = 44;
+    public static final int EXPORT_PDF_REQUEST_CODE = 46;
 
     private final Context mContext;
 
@@ -71,7 +71,7 @@ public class StorageController implements Store.Middleware<Action<ActionType, ?>
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("application/pdf");
         intent.putExtra(Intent.EXTRA_TITLE, a.getString(R.string.pdf_name_prefix)+getTimestamp());
-        a.startActivityForResult(intent, WRITE_REQUEST_CODE);
+        a.startActivityForResult(intent, EXPORT_PDF_REQUEST_CODE);
     }
 
     private boolean exportToPdf(Store<Action<ActionType, ?>, State> store, Uri uri) {
