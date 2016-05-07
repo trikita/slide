@@ -15,6 +15,7 @@ public abstract class State {
 
     public abstract String text();
     public abstract int page();
+    public abstract int cursor();
 
     public abstract boolean presentationMode();
     public abstract boolean toolbarShown();
@@ -31,8 +32,11 @@ public abstract class State {
             switch (a.type) {
                 case SET_TEXT:
                     return ImmutableState.copyOf(s).withText((String) a.value);
-                case SET_PAGE:
-                    return ImmutableState.copyOf(s).withPage((Integer) a.value);
+                case SET_CURSOR:
+                    String text = s.text().substring(0, (Integer) a.value);
+                    return ImmutableState.copyOf(s)
+                        .withPage(Slide.parse(text).size()-1)
+                        .withCursor((Integer) a.value);
                 case NEXT_PAGE:
                     return ImmutableState.copyOf(s)
                             .withPage(Math.min(s.page()+1, s.slides().size()-1));
@@ -57,6 +61,7 @@ public abstract class State {
             return ImmutableState.builder()
                     .text(c.getString(R.string.tutorial_text))
                     .page(0)
+                    .cursor(0)
                     .colorScheme(0)
                     .presentationMode(false)
                     .toolbarShown(true)

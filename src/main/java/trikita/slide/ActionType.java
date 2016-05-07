@@ -8,7 +8,7 @@ public enum ActionType {
 
     TOGGLE_TOOLBAR,
 
-    SET_PAGE,
+    SET_CURSOR,
     NEXT_PAGE,
     PREV_PAGE,
 

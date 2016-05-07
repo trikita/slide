@@ -47,16 +47,13 @@ public class MainLayout extends RenderableView {
                 init(() -> {
                     mEditor = Anvil.currentView();
                     mEditor.setOnSelectionChangedListener(pos -> {
-                        String s = App.getState().text();
-                        s = s.substring(0, Math.min(pos+1, s.length()));
-                        App.dispatch(new Action<>(ActionType.SET_PAGE, Slide.parse(s).size()-1));
+                        App.dispatch(new Action<>(ActionType.SET_CURSOR, pos));
                     });
                 });
                 onTextChanged(chars -> {
                     String s = chars.toString();
                     App.dispatch(new Action<>(ActionType.SET_TEXT, s));
-                    s = s.substring(0, mEditor.getSelectionStart());
-                    App.dispatch(new Action<>(ActionType.SET_PAGE, Slide.parse(s).size()-1));
+                    App.dispatch(new Action<>(ActionType.SET_CURSOR, mEditor.getSelectionStart()));
                 });
             });
 
