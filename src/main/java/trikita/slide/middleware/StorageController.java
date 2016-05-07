@@ -26,6 +26,7 @@ import java.text.DateFormat;
 
 public class StorageController implements Store.Middleware<Action<ActionType, ?>, State> {
     public static final int WRITE_REQUEST_CODE = 43;
+    public static final int PICK_IMAGE_REQUEST_CODE = 44;
 
     private final Context mContext;
 
@@ -42,6 +43,24 @@ public class StorageController implements Store.Middleware<Action<ActionType, ?>
             if (!exportToPdf(store, (Uri) action.value)) {
                 Toast.makeText(mContext, mContext.getString(R.string.failed_export_pdf), Toast.LENGTH_LONG).show();
             }
+            return;
+        } else if (action.type == ActionType.PICK_IMAGE) {
+            pickImage((Activity) action.value);
+            return;
+        } else if (action.type == ActionType.INSERT_IMAGE) {
+            String s = store.getState().text();
+            int c = store.getState().cursor();
+            String chunk = s.substring(0, c);
+            int startOfLine = chunk.lastIndexOf("\n");
+            if (startOfLine == -1) {
+                startOfLine = 0;
+                s = "@"+((Uri) action.value).toString()+"\n"+s;
+            } else {
+                s = s.substring(0, startOfLine+1)+"@"+((Uri) action.value).toString()+"\n"+s.substring(startOfLine+1);
+            }
+            App.dispatch(new Action<>(ActionType.SET_TEXT, s));
+            System.out.println("INSERT IMAGE cursor="+startOfLine);
+            App.dispatch(new Action<>(ActionType.SET_CURSOR, startOfLine));
             return;
         }
         next.dispatch(action);
@@ -91,5 +110,12 @@ public class StorageController implements Store.Middleware<Action<ActionType, ?>
     private String getTimestamp() {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd-HHmm");
         return df.format(Calendar.getInstance(TimeZone.getDefault()).getTimeInMillis());
+    }
+
+    private void pickImage(Activity a) {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/*");
+        a.startActivityForResult(intent, PICK_IMAGE_REQUEST_CODE);
     }
 }

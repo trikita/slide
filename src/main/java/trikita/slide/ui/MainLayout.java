@@ -124,6 +124,7 @@ public class MainLayout extends RenderableView {
         menu.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.menu_open) {
             } else if (item.getItemId() == R.id.menu_insert_image) {
+                App.dispatch(new Action<>(ActionType.PICK_IMAGE, (Activity) v.getContext()));
             } else if (item.getItemId() == R.id.menu_style) {
             } else if (item.getItemId() == R.id.menu_settings) {
             } else if (item.getItemId() == R.id.menu_export_pdf) {

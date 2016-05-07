@@ -50,10 +50,19 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == StorageController.WRITE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+
+        if (requestCode == StorageController.WRITE_REQUEST_CODE) {
             if (data != null) {
                 Uri uri = data.getData();
                 App.dispatch(new Action<>(ActionType.EXPORT_PDF, uri));
+            }
+        } else if (requestCode == StorageController.PICK_IMAGE_REQUEST_CODE) {
+            if (data != null) {
+                Uri uri = data.getData();
+                App.dispatch(new Action<>(ActionType.INSERT_IMAGE, uri));
             }
         }
     }
