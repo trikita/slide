@@ -1,17 +1,23 @@
 package trikita.slide;
 
+import android.content.Context;
+import android.net.Uri;
+import android.support.annotation.Nullable;
+
 import org.immutables.gson.Gson;
 import org.immutables.value.Value;
 
 import trikita.jedux.Action;
 import trikita.jedux.Store;
-import android.content.Context;
 
 import java.util.List;
 
 @Value.Immutable
 @Gson.TypeAdapters
 public abstract class State {
+
+    @Nullable
+    public abstract String uri();
 
     public abstract String text();
     public abstract int page();
@@ -30,6 +36,9 @@ public abstract class State {
     static class Reducer implements Store.Reducer<Action<ActionType, ?>, State> {
         public State reduce(Action<ActionType, ?> a, State s) {
             switch (a.type) {
+                case LOAD_DOCUMENT:
+                    return ImmutableState.copyOf(s)
+                        .withUri(((Uri) a.value).toString());
                 case SET_TEXT:
                     return ImmutableState.copyOf(s).withText((String) a.value);
                 case SET_CURSOR:

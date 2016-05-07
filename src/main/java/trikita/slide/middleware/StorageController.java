@@ -76,7 +76,6 @@ public class StorageController implements Store.Middleware<Action<ActionType, ?>
             } else {
                 Toast.makeText(mContext, mContext.getString(R.string.failed_open_doc), Toast.LENGTH_LONG).show();
             }
-            return;
         }
         next.dispatch(action);
     }
