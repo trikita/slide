@@ -9,7 +9,7 @@
                  android:allowBackup="true">
         <activity android:name=".ui.MainActivity"
                   android:theme="@style/fullscreen"
-                  android:windowSoftInputMode="adjustResize"
+                  android:windowSoftInputMode="stateHidden|adjustResize"
                   android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
