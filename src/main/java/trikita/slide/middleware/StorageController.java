@@ -8,8 +8,15 @@ import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 import trikita.jedux.Action;
 import trikita.jedux.Store;
@@ -19,12 +26,9 @@ import trikita.slide.R;
 import trikita.slide.Slide;
 import trikita.slide.State;
 import trikita.slide.ui.Style;
-import java.util.TimeZone;
-import java.util.Calendar;
-import java.text.SimpleDateFormat;
-import java.text.DateFormat;
 
 public class StorageController implements Store.Middleware<Action<ActionType, ?>, State> {
+    public static final int OPEN_DOCUMENT_REQUEST_CODE = 43;
     public static final int PICK_IMAGE_REQUEST_CODE = 44;
     public static final int EXPORT_PDF_REQUEST_CODE = 46;
 
@@ -59,11 +63,52 @@ public class StorageController implements Store.Middleware<Action<ActionType, ?>
                 s = s.substring(0, startOfLine+1)+"@"+((Uri) action.value).toString()+"\n"+s.substring(startOfLine+1);
             }
             App.dispatch(new Action<>(ActionType.SET_TEXT, s));
-            System.out.println("INSERT IMAGE cursor="+startOfLine);
             App.dispatch(new Action<>(ActionType.SET_CURSOR, startOfLine));
+            return;
+        } else if (action.type == ActionType.OPEN_DOCUMENT) {
+            openDocument((Activity) action.value);
+            return;
+        } else if (action.type == ActionType.LOAD_DOCUMENT) {
+            String doc = loadDocument((Uri) action.value);
+            if (doc != null) {
+                App.dispatch(new Action<>(ActionType.SET_TEXT, doc));
+                App.dispatch(new Action<>(ActionType.SET_CURSOR, 0));
+            } else {
+                Toast.makeText(mContext, mContext.getString(R.string.failed_open_doc), Toast.LENGTH_LONG).show();
+            }
             return;
         }
         next.dispatch(action);
+    }
+
+    private void openDocument(Activity a) {
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TITLE, a.getString(R.string.default_new_doc_name));
+        a.startActivityForResult(intent, OPEN_DOCUMENT_REQUEST_CODE);
+    }
+
+    private String loadDocument(Uri uri) {
+        InputStream is = null;
+        try {
+            is = mContext.getContentResolver().openInputStream(uri);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            StringBuilder builder = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                builder.append(line);
+                builder.append("\n");
+            }
+            return builder.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (is != null) {
+                try { is.close(); } catch (IOException e) {}
+            }
+        }
     }
 
     private void createPdf(Activity a) {

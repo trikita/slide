@@ -123,6 +123,7 @@ public class MainLayout extends RenderableView {
         menu.getMenuInflater().inflate(R.menu.overflow_popup, menu.getMenu());
         menu.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.menu_open) {
+                App.dispatch(new Action<>(ActionType.OPEN_DOCUMENT, (Activity) v.getContext()));
             } else if (item.getItemId() == R.id.menu_insert_image) {
                 App.dispatch(new Action<>(ActionType.PICK_IMAGE, (Activity) v.getContext()));
             } else if (item.getItemId() == R.id.menu_style) {

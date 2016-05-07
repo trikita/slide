@@ -15,6 +15,8 @@ public enum ActionType {
     SET_COLOR_SCHEME,
     SHARE,
 
+    OPEN_DOCUMENT,
+    LOAD_DOCUMENT,
     PICK_IMAGE,
     INSERT_IMAGE,
     CREATE_PDF,
