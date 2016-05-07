@@ -26,21 +26,38 @@ import trikita.slide.R;
 import trikita.slide.Slide;
 import trikita.slide.State;
 import trikita.slide.ui.Style;
+import android.os.HandlerThread;
+import android.os.Handler;
 
 public class StorageController implements Store.Middleware<Action<ActionType, ?>, State> {
     public static final int OPEN_DOCUMENT_REQUEST_CODE = 43;
     public static final int PICK_IMAGE_REQUEST_CODE = 44;
     public static final int EXPORT_PDF_REQUEST_CODE = 46;
 
+    private static final long FILE_WRITER_DELAY = 3000; // 3sec
+
     private final Context mContext;
+    private final Handler mHandler;
+
+    private final Runnable mDocUpdater = () -> {
+        if (App.getState().uri() != null) {
+            saveDocument();
+        }
+    };
 
     public StorageController(Context c) {
         mContext = c;
+		HandlerThread ht = new HandlerThread("document_backup");
+		ht.start();
+		mHandler = new Handler(ht.getLooper());
     }
 
     @Override
     public void dispatch(Store<Action<ActionType, ?>, State> store, Action<ActionType, ?> action, Store.NextDispatcher<Action<ActionType, ?>> next) {
-        if (action.type == ActionType.CREATE_PDF) {
+        if (action.type == ActionType.SET_TEXT) {
+            dumpToFile(true);
+        } else if (action.type == ActionType.CREATE_PDF) {
+            dumpToFile(false);
             createPdf((Activity) action.value);
             return;
         } else if (action.type == ActionType.EXPORT_PDF) {
@@ -66,6 +83,7 @@ public class StorageController implements Store.Middleware<Action<ActionType, ?>
             App.dispatch(new Action<>(ActionType.SET_CURSOR, startOfLine));
             return;
         } else if (action.type == ActionType.OPEN_DOCUMENT) {
+            dumpToFile(false);
             openDocument((Activity) action.value);
             return;
         } else if (action.type == ActionType.LOAD_DOCUMENT) {
@@ -78,6 +96,33 @@ public class StorageController implements Store.Middleware<Action<ActionType, ?>
             }
         }
         next.dispatch(action);
+    }
+
+    public void dumpToFile(boolean withDelay) {
+        mHandler.removeCallbacksAndMessages(null);
+        if (withDelay) {
+            mHandler.postDelayed(mDocUpdater, FILE_WRITER_DELAY);
+        } else {
+            mHandler.post(mDocUpdater);
+        }
+    }
+
+    private void saveDocument() {
+        ParcelFileDescriptor pfd = null;
+        try {
+            Uri uri = Uri.parse(App.getState().uri());
+            pfd = mContext.getContentResolver().openFileDescriptor(uri, "w");
+            FileOutputStream fos = new FileOutputStream(pfd.getFileDescriptor());
+            fos.getChannel().truncate(0);
+            fos.write((App.getState().text() + "\n").getBytes());
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (pfd != null) {
+                try { pfd.close(); } catch (IOException e) {}
+            }
+        }
     }
 
     private void openDocument(Activity a) {
