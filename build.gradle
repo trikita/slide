@@ -48,6 +48,8 @@ repositories {
 }
 
 dependencies {
+    compile 'com.android.support:support-annotations:+'
+
     compile 'co.trikita:anvil-sdk19:0.3.1'
     compile 'com.github.trikita:jedux:-SNAPSHOT'
     compile 'com.github.trikita:promote:-SNAPSHOT'
