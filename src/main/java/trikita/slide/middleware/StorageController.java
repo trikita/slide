@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.ParcelFileDescriptor;
 import android.widget.Toast;
 
@@ -26,8 +28,6 @@ import trikita.slide.R;
 import trikita.slide.Slide;
 import trikita.slide.State;
 import trikita.slide.ui.Style;
-import android.os.HandlerThread;
-import android.os.Handler;
 
 public class StorageController implements Store.Middleware<Action<ActionType, ?>, State> {
     public static final int OPEN_DOCUMENT_REQUEST_CODE = 43;
@@ -36,20 +36,27 @@ public class StorageController implements Store.Middleware<Action<ActionType, ?>
 
     private static final long FILE_WRITER_DELAY = 3000; // 3sec
 
-    private final Context mContext;
+    private Context mContext = null;
     private final Handler mHandler;
 
     private final Runnable mDocUpdater = () -> {
         if (App.getState().uri() != null) {
-            saveDocument();
+            try {
+                int flags = (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                mContext.getContentResolver().takePersistableUriPermission(Uri.parse(App.getState().uri()), flags);
+                saveDocument();
+            } catch (SecurityException e) {
+                e.printStackTrace();
+                Toast.makeText(mContext, mContext.getString(R.string.failed_save_doc), Toast.LENGTH_LONG).show();
+            }
         }
     };
 
     public StorageController(Context c) {
         mContext = c;
-		HandlerThread ht = new HandlerThread("document_backup");
-		ht.start();
-		mHandler = new Handler(ht.getLooper());
+        HandlerThread ht = new HandlerThread("document_backup");
+        ht.start();
+        mHandler = new Handler(ht.getLooper());
     }
 
     @Override

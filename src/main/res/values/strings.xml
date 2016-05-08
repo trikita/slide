@@ -8,6 +8,7 @@
     <string name="failed_export_pdf">Failed to export to PDF</string>
     <string name="default_new_doc_name">NewSlideDoc</string>
     <string name="failed_open_doc">Failed to open a document</string>
+    <string name="failed_save_doc">Failed to found a document</string>
 
     <string name="dlg_style_picker_title">Pick a style</string>
     <string name="btn_ok">Ok</string>
