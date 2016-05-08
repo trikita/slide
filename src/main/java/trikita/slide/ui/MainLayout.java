@@ -112,7 +112,7 @@ public class MainLayout extends RenderableView {
                 App.dispatch(new Action<>(ActionType.PICK_IMAGE, (Activity) v.getContext()));
             } else if (item.getItemId() == R.id.menu_style) {
                 openStylePicker();
-            } else if (item.getItemId() == R.id.menu_settings) {
+            //} else if (item.getItemId() == R.id.menu_settings) {
             } else if (item.getItemId() == R.id.menu_export_pdf) {
                 App.dispatch(new Action<>(ActionType.CREATE_PDF, (Activity) v.getContext()));
             }
