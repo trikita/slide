@@ -13,8 +13,6 @@ public enum ActionType {
     PREV_PAGE,
 
     SET_COLOR_SCHEME,
-    SHARE,
-
     OPEN_DOCUMENT,
     LOAD_DOCUMENT,
     PICK_IMAGE,
