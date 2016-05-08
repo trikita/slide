@@ -9,6 +9,9 @@
     <string name="default_new_doc_name">NewSlideDoc</string>
     <string name="failed_open_doc">Failed to open a document</string>
 
+    <string name="dlg_style_picker_title">Pick a style</string>
+    <string name="btn_ok">Ok</string>
+
     <string name="om_open">Open</string>
     <string name="om_insert_image">Insert image</string>
     <string name="om_style">Style</string>

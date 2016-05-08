@@ -2,6 +2,8 @@ package trikita.slide.ui;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.view.Gravity;
 import android.view.View;
 
@@ -65,6 +67,31 @@ public class Style {
             typeface("MaterialIcons-Regular.ttf");
             textSize(sip(26));
             textColor(0xcc555555);
+        }
+    }
+
+    public static class StylePicker {
+        public static void circle(int fgColor, int bgColor) {
+            ShapeDrawable circle = new ShapeDrawable(new OvalShape());
+            circle.getPaint().setColor(bgColor);
+            backgroundDrawable(circle);
+
+            size(dip(48), dip(48));
+            layoutGravity(CENTER_HORIZONTAL);
+            gravity(CENTER);
+            textColor(fgColor);
+        }
+
+        public static void itemNormal() {
+            text("A");
+            textSize(sip(20));
+            typeface(Typeface.create(SLIDE_FONT, Typeface.NORMAL));
+        }
+
+        public static void itemSelected() {
+            text("\ue876");
+            textSize(sip(24));
+            typeface("MaterialIcons-Regular.ttf");
         }
     }
 
