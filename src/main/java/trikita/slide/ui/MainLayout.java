@@ -17,9 +17,6 @@ import trikita.slide.R;
 import static trikita.anvil.DSL.*;
 
 public class MainLayout extends RenderableView {
-    private final static int CLOSE_BUTTON = 0;
-    private final static int PALETTE_BUTTON = 1;
-    private final static int SHARE_BUTTON = 2;
 
     private Editor mEditor;
 
@@ -94,27 +91,13 @@ public class MainLayout extends RenderableView {
                 Style.Preview.touchPlaceholder(v -> App.dispatch(new Action<>(ActionType.NEXT_PAGE)));
             });
 
-            linearLayout(() -> {
-                size(WRAP, WRAP);
+            button(() -> {
+                Style.Preview.button(App.getState().colorScheme());
                 margin(0, 0, 0, dip(25));
                 alignParentBottom();
                 centerHorizontal();
                 visibility(App.getState().toolbarShown());
-
-                button(() -> {
-                    Style.Preview.button(CLOSE_BUTTON, App.getState().colorScheme());
-                    onClick(v -> App.dispatch(new Action<>(ActionType.CLOSE_PRESENTATION)));
-                });
-                button(() -> {
-                    Style.Preview.button(PALETTE_BUTTON, App.getState().colorScheme());
-                    onClick(v -> App.dispatch(new Action<>(
-                                ActionType.SET_COLOR_SCHEME,
-                                (App.getState().colorScheme() + 1) % Style.COLOR_SCHEMES.length)));
-                });
-                button(() -> {
-                    Style.Preview.button(SHARE_BUTTON, App.getState().colorScheme());
-                    onClick(v -> App.dispatch(new Action<>(ActionType.SHARE)));
-                });
+                onClick(v -> App.dispatch(new Action<>(ActionType.CLOSE_PRESENTATION)));
             });
         });
     }

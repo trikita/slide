@@ -29,7 +29,9 @@ public class Style {
         {0xffffffff, 0xffe91e63, R.drawable.light_round_button, 0xff333333},    // white on pink
     };
 
-    private final static String[] ICONS = { "\ue879", "\ue40a", "\ue149" };
+    private final static int CLOSE_BUTTON = 0;
+
+    private final static String[] ICONS = { "\ue5cd", "\ue5d4", "\ue876" };
 
     public static class Editor {
         public static void background() {
@@ -108,10 +110,9 @@ public class Style {
             });
         }
 
-        public static void button(int pos, int scheme) {
+        public static void button(int scheme) {
             size(dip(54), dip(54));
-            margin(dip(10), 0);
-            text(ICONS[pos]);
+            text(ICONS[CLOSE_BUTTON]);
             textSize(sip(30));
             textColor(COLOR_SCHEMES[scheme][3]);
             typeface("MaterialIcons-Regular.ttf");
