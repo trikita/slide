@@ -30,6 +30,8 @@ public class Style {
     };
 
     private final static int CLOSE_BUTTON = 0;
+    private final static int MENU_BUTTON = 1;
+    private final static int CHECK_BUTTON = 2;
 
     private final static String[] ICONS = { "\ue5cd", "\ue5d4", "\ue876" };
 
@@ -65,7 +67,7 @@ public class Style {
             alignParentTop();
             margin(dip(12));
             gravity(Gravity.CENTER);
-            text("\ue5d4");
+            text(ICONS[MENU_BUTTON]);
             typeface("MaterialIcons-Regular.ttf");
             textSize(sip(26));
             textColor(0xcc555555);
@@ -91,7 +93,7 @@ public class Style {
         }
 
         public static void itemSelected() {
-            text("\ue876");
+            text(ICONS[CHECK_BUTTON]);
             textSize(sip(24));
             typeface("MaterialIcons-Regular.ttf");
         }
