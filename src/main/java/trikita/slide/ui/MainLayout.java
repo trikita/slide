@@ -1,6 +1,7 @@
 package trikita.slide.ui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.view.View;
 import android.widget.PopupMenu;
@@ -127,6 +128,7 @@ public class MainLayout extends RenderableView {
             } else if (item.getItemId() == R.id.menu_insert_image) {
                 App.dispatch(new Action<>(ActionType.PICK_IMAGE, (Activity) v.getContext()));
             } else if (item.getItemId() == R.id.menu_style) {
+                openStylePicker();
             } else if (item.getItemId() == R.id.menu_settings) {
             } else if (item.getItemId() == R.id.menu_export_pdf) {
                 App.dispatch(new Action<>(ActionType.CREATE_PDF, (Activity) v.getContext()));
@@ -134,5 +136,16 @@ public class MainLayout extends RenderableView {
             return true;
         });
         menu.show();
+    }
+
+    private void openStylePicker() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+            .setTitle(getContext().getString(R.string.dlg_style_picker_title))
+            .setCancelable(true)
+            .setView(new StylePicker(getContext()))
+            .setPositiveButton(getContext().getString(R.string.btn_ok), (arg0, arg1) -> {});
+        AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
     }
 }
