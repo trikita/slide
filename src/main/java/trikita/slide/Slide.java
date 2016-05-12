@@ -16,9 +16,11 @@ import android.text.style.StyleSpan;
 import android.text.style.TypefaceSpan;
 import android.view.Gravity;
 
+import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -133,7 +135,7 @@ public class Slide {
         }
     }
 
-    public void render(Context c, Canvas canvas, String typeface, int fg, int bg) {
+    public void render(Context c, Canvas canvas, String typeface, int fg, int bg, boolean blocking) {
         TextPaint textPaint = new TextPaint();
         canvas.drawColor(bg);
         textPaint.setColor(fg);
@@ -142,14 +144,27 @@ public class Slide {
 
         for (Background img: backgrounds) {
             if (img.url != null) {
+                Bitmap b = null;
                 CacheTarget cacheTarget = new CacheTarget();
                 bitmaps.put(img.url, cacheTarget);
-                Picasso.with(c)
-                        .load(img.url)
-                        .resize((int) (canvas.getWidth() * img.scale), (int) (canvas.getHeight() * img.scale))
-                        .centerInside()
-                        .into(cacheTarget);
-                Bitmap b = cacheTarget.getCacheBitmap();
+                RequestCreator request = Picasso.with(c)
+                        .load(img.url);
+                if (img.scale > 0) {
+                    request = request.resize((int) (canvas.getWidth() * img.scale), (int) (canvas.getHeight() * img.scale));
+                } else {
+                    request = request.resize(canvas.getWidth(), canvas.getHeight());
+                }
+                request = request.centerInside();
+                if (blocking) {
+                    try {
+                        b = request.get();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    request.into(cacheTarget);
+                    b = cacheTarget.getCacheBitmap();
+                }
                 if (b != null) {
                     Rect r = new Rect();
                     Gravity.apply(img.gravity, b.getWidth(), b.getHeight(),

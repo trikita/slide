@@ -34,7 +34,8 @@ public class Preview extends View {
             slides.get(page).render(getContext(), canvas,
                     Style.SLIDE_FONT,
                     Style.COLOR_SCHEMES[App.getState().colorScheme()][0],
-                    Style.COLOR_SCHEMES[App.getState().colorScheme()][1]);
+                    Style.COLOR_SCHEMES[App.getState().colorScheme()][1],
+                    false);
         } else {
             canvas.drawColor(Style.COLOR_SCHEMES[App.getState().colorScheme()][1]);
         }
