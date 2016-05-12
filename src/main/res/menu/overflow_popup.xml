@@ -9,9 +9,9 @@
     <item
         android:id="@+id/menu_style"
         android:title="@string/om_style"/>
-    <item
-        android:id="@+id/menu_settings"
-        android:title="@string/om_settings"/>
+    <!--<item-->
+        <!--android:id="@+id/menu_settings"-->
+        <!--android:title="@string/om_settings"/>-->
     <item
         android:id="@+id/menu_export_pdf"
         android:title="@string/om_export_pdf"/>

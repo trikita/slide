@@ -9,7 +9,7 @@ import trikita.jedux.Action;
 import trikita.promote.Promote;
 import trikita.slide.ActionType;
 import trikita.slide.App;
-import trikita.slide.middleware.Exporter;
+import trikita.slide.middleware.StorageController;
 
 public class MainActivity extends Activity {
 
@@ -50,11 +50,19 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Exporter.WRITE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            if (data != null) {
-                Uri uri = data.getData();
-                App.dispatch(new Action<>(ActionType.EXPORT_PDF, uri));
-            }
+        if (resultCode != RESULT_OK || data == null) {
+            return;
+        }
+
+        if (requestCode == StorageController.EXPORT_PDF_REQUEST_CODE) {
+            Uri uri = data.getData();
+            App.dispatch(new Action<>(ActionType.EXPORT_PDF, uri));
+        } else if (requestCode == StorageController.PICK_IMAGE_REQUEST_CODE) {
+            Uri uri = data.getData();
+            App.dispatch(new Action<>(ActionType.INSERT_IMAGE, uri));
+        } else if (requestCode == StorageController.OPEN_DOCUMENT_REQUEST_CODE) {
+            Uri uri = data.getData();
+            App.dispatch(new Action<>(ActionType.LOAD_DOCUMENT, uri));
         }
     }
 }

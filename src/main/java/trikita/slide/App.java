@@ -6,7 +6,7 @@ import trikita.anvil.Anvil;
 import trikita.jedux.Action;
 import trikita.jedux.Logger;
 import trikita.jedux.Store;
-import trikita.slide.middleware.Exporter;
+import trikita.slide.middleware.StorageController;
 import trikita.slide.middleware.PersistanceController;
 import trikita.slide.middleware.WindowController;
 
@@ -28,13 +28,16 @@ public class App extends Application {
         if (initialState == null) {
             initialState = State.Default.build(this);
         }
+        StorageController sc = new StorageController(this);
 
         this.store = new Store<>(new State.Reducer(),
                 initialState,
 //                new Logger<>("Slide"),
                 persistanceController,
                 this.windowController,
-                new Exporter(this));
+                sc);
+
+        sc.dumpToFile(false);   // false - with no delay
 
         this.store.subscribe(Anvil::render);
     }

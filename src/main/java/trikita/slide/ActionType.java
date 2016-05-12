@@ -8,13 +8,15 @@ public enum ActionType {
 
     TOGGLE_TOOLBAR,
 
-    SET_PAGE,
+    SET_CURSOR,
     NEXT_PAGE,
     PREV_PAGE,
 
+    OPEN_DOCUMENT,
+    LOAD_DOCUMENT,
+    PICK_IMAGE,
+    INSERT_IMAGE,
     SET_COLOR_SCHEME,
-    SHARE,
-
     CREATE_PDF,
     EXPORT_PDF
 }
