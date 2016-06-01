@@ -18,6 +18,11 @@ The method is designed for the people who are not good at presentations and who 
 <img alt="Editor" src="editor.png" width="40%" />
 <img alt="Preview" src="preview.png" width="40%" />
 
+## Download
+
+* [F-Droid](https://f-droid.org/repository/browse/?fdid=trikita.slide)
+* [Google Play](https://play.google.com/store/apps/details?id=trikita.slide)
+
 ## Syntax
 
 - [x] Each paragraph is a slide. Blank lines separate slides
