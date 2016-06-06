@@ -23,6 +23,8 @@ The method is designed for the people who are not good at presentations and who 
 * [F-Droid](https://f-droid.org/repository/browse/?fdid=trikita.slide)
 * [Google Play](https://play.google.com/store/apps/details?id=trikita.slide)
 
+Demo presentation made with Slide can be found on [SlideShare](http://www.slideshare.net/SergeZaitsev/slide-201606051659) (nothing fancy, just basic markup demonstration). The original PDF is on [Google Drive](https://drive.google.com/open?id=0Bztexa2TJWdcdlZXRk1MSTVoNjQ).
+
 ## Syntax
 
 - [x] Each paragraph is a slide. Blank lines separate slides
