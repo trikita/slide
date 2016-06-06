@@ -36,8 +36,8 @@ Also there is a compatible standalone HTML variant of Slide, it's only 4KB in si
 - [x] Line starting with hash sign is a header
 - [x] Line starting with two spaces are rendered as code (monospace).
 - [x] Line starging with "@" allow to insert images from the URL (web, dropbox, local device storage)
-- [ ] Images may be scaled, e.g `@http://example.com/bg.png 30%`
-- [ ] Images may have certain gravity, e.g. `@http://example.com/logo.png top`
+- [x] Images may be scaled, e.g `@http://example.com/bg.png 30%`
+- [x] Images may have certain gravity, e.g. `@http://example.com/logo.png top`
 - [x] Dot at the beginning of a line is ignored. It's helpful to "escape" blank lines or special symbols inside a slide.
 
 ```
