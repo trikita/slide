@@ -25,6 +25,8 @@ The method is designed for the people who are not good at presentations and who 
 
 Demo presentation made with Slide can be found on [SlideShare](http://www.slideshare.net/SergeZaitsev/slide-201606051659) (nothing fancy, just basic markup demonstration). The original PDF is on [Google Drive](https://drive.google.com/open?id=0Bztexa2TJWdcdlZXRk1MSTVoNjQ).
 
+Also there is a compatible standalone HTML variant of Slide, it's only 4KB in size and to make a presentation you will only need a text editor. [Check it out!](https://github.com/trikita/slide-html).
+
 ## Syntax
 
 - [x] Each paragraph is a slide. Blank lines separate slides
