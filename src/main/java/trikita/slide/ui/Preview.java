@@ -31,7 +31,7 @@ public class Preview extends View {
         List<Slide> slides = App.getState().slides();
         int page = App.getState().page();
         if (page >= 0 && page < slides.size()) {
-            slides.get(page).render(getContext(), canvas,
+            slides.get(page).render(getContext(), canvas, getWidth(), getHeight(),
                     Style.SLIDE_FONT,
                     Style.COLOR_SCHEMES[App.getState().colorScheme()][0],
                     Style.COLOR_SCHEMES[App.getState().colorScheme()][1],

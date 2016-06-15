@@ -194,6 +194,7 @@ public class StorageController implements Store.Middleware<Action<ActionType, ?>
                     page.getCanvas().drawColor(Style.COLOR_SCHEMES[store.getState().colorScheme()][1]);
                     slide.render(mContext,
                             page.getCanvas(),
+                            page.getCanvas().getWidth(), page.getCanvas().getHeight(),
                             Style.SLIDE_FONT,
                             Style.COLOR_SCHEMES[App.getState().colorScheme()][0],
                             Style.COLOR_SCHEMES[App.getState().colorScheme()][1],

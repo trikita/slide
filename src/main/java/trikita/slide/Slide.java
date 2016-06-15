@@ -135,7 +135,7 @@ public class Slide {
         }
     }
 
-    public void render(Context c, Canvas canvas, String typeface, int fg, int bg, boolean blocking) {
+    public void render(Context c, Canvas canvas, int width, int height, String typeface, int fg, int bg, boolean blocking) {
         TextPaint textPaint = new TextPaint();
         canvas.drawColor(bg);
         textPaint.setColor(fg);
@@ -150,9 +150,9 @@ public class Slide {
                 RequestCreator request = Picasso.with(c)
                         .load(img.url);
                 if (img.scale > 0) {
-                    request = request.resize((int) (canvas.getWidth() * img.scale), (int) (canvas.getHeight() * img.scale));
+                    request = request.resize((int) (width * img.scale), (int) (height * img.scale));
                 } else {
-                    request = request.resize(canvas.getWidth(), canvas.getHeight());
+                    request = request.resize(width, height);
                 }
                 request = request.centerInside();
                 if (blocking) {
@@ -168,7 +168,7 @@ public class Slide {
                 if (b != null) {
                     Rect r = new Rect();
                     Gravity.apply(img.gravity, b.getWidth(), b.getHeight(),
-                            new Rect(0, 0, canvas.getWidth(), canvas.getHeight()), r);
+                            new Rect(0, 0, width, height), r);
                     canvas.drawBitmap(b, r.left, r.top, textPaint);
                 }
             }
@@ -176,10 +176,11 @@ public class Slide {
 
         float margin = 0.1f;
 
-        int w = (int) (canvas.getWidth() * (1 - margin * 2));
-        int h = (int) (canvas.getHeight() * (1 - margin * 2));
+        int w = (int) (width * (1 - margin * 2));
+        int h = (int) (height * (1 - margin * 2));
 
-        for (int textSize = canvas.getHeight(); textSize > 1 ; textSize--) {
+
+        for (int textSize = height; textSize > 1 ; textSize--) {
             textPaint.setTextSize(textSize);
             if (StaticLayout.getDesiredWidth(text, textPaint) <= w) {
                 StaticLayout layout = new StaticLayout(text, textPaint, w, Layout.Alignment.ALIGN_NORMAL, 1, 0, false);
@@ -188,12 +189,12 @@ public class Slide {
                 }
                 int l = 0;
                 for (int i = 0; i < layout.getLineCount(); i++) {
-                    int m = (int) (canvas.getWidth() - layout.getLineWidth(i))/2;
+                    int m = (int) (width - layout.getLineWidth(i))/2;
                     if (i == 0 || m < l) {
                         l = m;
                     }
                 }
-                canvas.translate(l, (canvas.getHeight() - layout.getHeight())/2);
+                canvas.translate(l, (height - layout.getHeight())/2);
 
                 textPaint.setColor(bg);
                 textPaint.setStyle(Paint.Style.STROKE);
