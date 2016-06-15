@@ -1,5 +1,7 @@
 # Slide
 
+[![Build Status](https://travis-ci.org/trikita/slide.svg?branch=master)](https://travis-ci.org/trikita/slide)
+
 <div>
 <img align="left" src="https://raw.githubusercontent.com/trikita/slide/master/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="logo" width="96px" height="96px" />
 <p>Minimal presentation tool for Android, perfect for using <a href="https://en.wikipedia.org/wiki/Takahashi_method">Takahashi</a> method.
