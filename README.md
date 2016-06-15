@@ -4,63 +4,96 @@
 
 <div>
 <img align="left" src="https://raw.githubusercontent.com/trikita/slide/master/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="logo" width="96px" height="96px" />
-<p>Minimal presentation tool for Android, perfect for using <a href="https://en.wikipedia.org/wiki/Takahashi_method">Takahashi</a> method.
-Unlike a typical presentation, only a few words are printed on each slide using very large characters. To make up for this, a presenter will use many more slides than in a traditional presentation, each slide being shown for a much shorter duration.
+<p>A pure and simple presentation tool for Android inspired by <a href="https://en.wikipedia.org/wiki/Takahashi_method">Takahashi</a> method.
+With simple markup language you can easily make modern-looking text slides. The main idea of such a technique is to visualize speech keynote with no distracting details. Slides with only a few words shown can easily keep the audience aware of the speaker's point.
 </p>
 </div>
 
 <br/>
 
-The slides use plain text in a visual manner, to help the audience quickly read and understand the material. It's said to be helpful with Japanese and other eastern languages which use non-Latin alphabets.
+It is also said to be extremely helpful with Japanese and other eastern languages which use non-Latin alphabets.
 
-Many presenters in developer conferences use their own variant on Takahashi. 
+## Demo
 
-The method is designed for the people who are not good at presentations and who are quite nervous about the idea of presenting. This method helps the presenter to get organized during the talk and keeps the presenter on track while presenting. The method provides clear visual support for the audience and helps make the content more memorable.
+<img alt="Demo" src="demo.gif" width="40%" />
 
-<img alt="Editor" src="editor.png" width="40%" />
-<img alt="Preview" src="preview.png" width="40%" />
+View the demo presentation on [SlideShare](http://www.slideshare.net/SergeZaitsev/trikita-slide-pdf-example)
 
 ## Download
 
 * [F-Droid](https://f-droid.org/repository/browse/?fdid=trikita.slide)
 * [Google Play](https://play.google.com/store/apps/details?id=trikita.slide)
 
-Demo presentation made with Slide can be found on [SlideShare](http://www.slideshare.net/SergeZaitsev/slide-201606051659) (nothing fancy, just basic markup demonstration). The original PDF is on [Google Drive](https://drive.google.com/open?id=0Bztexa2TJWdcdlZXRk1MSTVoNjQ).
-
-Also there is a compatible standalone HTML variant of Slide, it's only 4KB in size and to make a presentation you will only need a text editor. [Check it out!](https://github.com/trikita/slide-html)
-
 ## Syntax
 
-- [x] Each paragraph is a slide. Blank lines separate slides
-- [x] Text is rendered using the largest possible font size to fit the slide bounds
-- [x] Single-line text is centered, otherwise it's left-aligned
-- [x] Text surrounded with asterisks is rendered as bold (emphasized). Use `**` to render a normal asterisk sign
-- [x] Line starting with hash sign is a header
-- [x] Line starting with two spaces are rendered as code (monospace).
-- [x] Line starging with "@" allow to insert images from the URL (web, dropbox, local device storage)
-- [x] Images may be scaled, e.g `@http://example.com/bg.png 30%`
-- [x] Images may have certain gravity, e.g. `@http://example.com/logo.png top`
-- [x] Dot at the beginning of a line is ignored. It's helpful to "escape" blank lines or special symbols inside a slide.
+**General**
+
+- Each paragraph is a slide. Blank lines separate slides
+- Text is rendered using the largest possible font size to fit in the slide boundaries
+- Single-line text is centered, otherwise it's left-aligned
+- Dot at the beginning of a line is ignored. It's helpful to "escape" blank lines or special symbols inside a slide
+
+**Text style**
+
+- Text surrounded with asterisks is rendered as bold (emphasized). Use `**` to render a normal asterisk sign
+- Line starting with hash sign is a header
+- Line starting with two spaces are rendered as code (monospace).
+
+**Images**
+
+- Line starging with "@" allow to insert images from the URL (web, dropbox, local device storage)
+- Images may be scaled, e.g `@http://example.com/bg.png 30%`
+- Images may have certain gravity, e.g. `@http://example.com/logo.png top`
+
+## Usage
+
+Get a full understanding of Slide syntax in the following presentation markup:
 
 ```
-This is
-a slide
+#SLIDE
+perfect for keeping
+your audience focused
 
-# Header
-@http://example.com/logo.png 20% left top
-.
-This is *another* slide
+text is *ALL* you've got
+text is brief and clear
+
+simple markup syntax
+
+• big font size
+• laconic messages
+• many slides
+
+@http://www.magic4walls.com/wp-content/uploads/2015/10/two-lines-between-black-and-white-circles-minimalism-wallpaper.jpg 140% top
+minimal graphics
 
 Code:
+.
   int main() {
     return 0;
   }
+
+#Slide is open-source
+.
+https://github.com/trikita/slide
+
+#Feedback
+#appreciated!  
 ```
 
-Using:
+Check out the presentation on [SlideShare](http://www.slideshare.net/SergeZaitsev/trikita-slide-app-demo)
+
+## Dependencies
 
 * [Jedux](https://github.com/trikita/jedux) for Redux architecture
 * [Anvil](https://github.com/zserge/anvil) for reactive views
 * [Immutables](http://immutables.github.io) for immutable Redux state
 * Material Icons TTF font
-* Standard Andorid API to render PDF slides
+* Standard Android API to render PDF slides
+
+## Slide & HTML
+
+There is also a compatible standalone HTML version of Slide. You can make a presentation in a text editor using not only Slide markup but the power of CSS as well. Find out more on the project [Github](https://github.com/trikita/slide-html).
+
+## License
+
+Code is distributed under MIT license, feel free to use it in your proprietary projects as well.
