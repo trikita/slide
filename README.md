@@ -29,19 +29,19 @@ View the demo presentation on [SlideShare](http://www.slideshare.net/SergeZaitse
 **General**
 
 - Each paragraph is a slide. Blank lines separate slides
-- Text is rendered using the largest possible font size to fit in the slide boundaries
+- Text is rendered using the largest possible font size to fit in the slide bounds
 - Single-line text is centered, otherwise it's left-aligned
 - Dot at the beginning of a line is ignored. It's helpful to "escape" blank lines or special symbols inside a slide
 
 **Text style**
 
-- Text surrounded with asterisks is rendered as bold (emphasized). Use `**` to render a normal asterisk sign
-- Line starting with hash sign is a header
-- Line starting with two spaces are rendered as code (monospace).
+- Text surrounded with `*` is rendered as bold (emphasized). Use `**` to render a normal `*` sign
+- Line starting with `#` is a header
+- Line starting with `␣␣` (two spaces) is rendered as code (monospace).
 
 **Images**
 
-- Line starging with "@" allow to insert images from the URL (web, dropbox, local device storage)
+- Line starting with `@` inserts an image from the URL (web, dropbox, local device storage)
 - Images may be scaled, e.g `@http://example.com/bg.png 30%`
 - Images may have certain gravity, e.g. `@http://example.com/logo.png top`
 
