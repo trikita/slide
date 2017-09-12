@@ -1,21 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">Slide</string>
-  
-  <string name="tutorial_text">SLIDE\n\nChaque paragraphe\nest une diapo\n\nCeci est une diapo\n.\navec une ligne vide\n\nTouchez l\'aperçu\npour commencer la présentation.\nVous pouvez également choisir\n un ensemble de couleurs ici.\n\nVoilà !\n\nN\'oubliez pas d\'exporter\nau format PDF et de partager.</string>
-  
-  <string name="pdf_name_prefix">Slide-</string>
-  <string name="failed_export_pdf">L\'export au format PDF a échoué</string>
-  <string name="default_new_doc_name">NewSlideDoc</string>
-  <string name="failed_open_doc">L\'ouverture du document a échoué</string>
-  <string name="failed_save_doc">Le document n\'a pas été trouvé</string>
-  
-  <string name="dlg_style_picker_title">Choisir un style</string>
-  <string name="btn_ok">Ok</string>
-  
-  <string name="om_open">Ouvrir</string>
-  <string name="om_insert_image">Insérer une image</string>
-  <string name="om_style">Style</string>
-  <string name="om_settings">Réglages</string>
-  <string name="om_export_pdf">Exporter en PDF</string>
+    <string name="app_name">Slide</string>
+
+    <string name="tutorial_text">SLIDE\n
+ \n
+ Chaque paragraphe\n
+ est une diapositive\n
+ \n
+ Ceci est une diapositive\n
+ .\n
+ avec une ligne vide\n
+  \n
+ Touchez l\'aperçu\n
+ pour commencer la présentation.\n
+ Vous pouvez également choisir\n
+ un ensemble de couleurs ici.\n
+ \n
+ Voilà !\n
+ \n
+ N\'oubliez pas d\'exporter\n
+ au format PDF et de partager.</string>
+
+    <string name="pdf_name_prefix">Slide-</string>
+    <string name="failed_export_pdf">L\'export au format PDF a échoué</string>
+    <string name="default_new_doc_name">NouvellePresentation</string>
+    <string name="failed_open_doc">L\'ouverture du document a échoué</string>
+    <string name="failed_save_doc">Le document n\'a pas été trouvé</string>
+
+    <string name="dlg_style_picker_title">Choisir un style</string>
+    <string name="btn_ok">Ok</string>
+
+    <string name="om_open">Ouvrir</string>
+    <string name="om_insert_image">Insérer une image</string>
+    <string name="om_style">Style</string>
+    <string name="om_settings">Paramètres</string>
+    <string name="om_export_pdf">Exporter en PDF</string>
 </resources>
