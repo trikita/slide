@@ -1,11 +1,17 @@
 package trikita.slide.ui;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Shader;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.graphics.drawable.shapes.RectShape;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.SeekBar;
 
 import static trikita.anvil.DSL.*;
 
@@ -27,6 +33,11 @@ public class Style {
         {0xffffffff, 0xff3f51b5, R.drawable.light_round_button, 0xff333333},    // white on indigo
         {0xffffffff, 0xff75507b, R.drawable.light_round_button, 0xff333333},    // white on plum
         {0xffffffff, 0xffe91e63, R.drawable.light_round_button, 0xff333333},    // white on pink
+        {0xffffffff, 0xff00FF00, R.drawable.light_round_button, 0xff333333},    // white on limegreen
+        {0xffffffff, 0xff9932CC, R.drawable.light_round_button, 0xff333333},    //white on darkorchid
+        {0xff222222, 0xffFFDF00, R.drawable.light_round_button, 0xff333333},    //black on gold yellow
+        {0xff222222, 0xffD2691E, R.drawable.light_round_button, 0xff333333},    //white on chocolate brown
+
     };
 
     private final static int CLOSE_BUTTON = 0;
@@ -85,6 +96,7 @@ public class Style {
             gravity(CENTER);
             textColor(fgColor);
         }
+
 
         public static void itemNormal() {
             text("A");

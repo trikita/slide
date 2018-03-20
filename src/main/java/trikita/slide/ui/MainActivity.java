@@ -1,9 +1,20 @@
 package trikita.slide.ui;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
+
+import java.io.File;
 
 import trikita.jedux.Action;
 import trikita.promote.Promote;
@@ -12,12 +23,20 @@ import trikita.slide.App;
 import trikita.slide.middleware.StorageController;
 
 public class MainActivity extends Activity {
-
+    String path = "";
     @Override
     public void onCreate(Bundle b) {
         super.onCreate(b);
         setContentView(new MainLayout(this));
         App.getWindowController().setWindow(getWindow());
+        //Fixing the keyboard Issue #10
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        //Fix the keyboard Issue #2
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     @Override
@@ -63,6 +82,10 @@ public class MainActivity extends Activity {
         } else if (requestCode == StorageController.OPEN_DOCUMENT_REQUEST_CODE) {
             Uri uri = data.getData();
             App.dispatch(new Action<>(ActionType.LOAD_DOCUMENT, uri));
+        }   //Adding the save function
+        else if (requestCode == StorageController.SAVE_DOCUMENT_REQUEST_CODE) {
+            Uri uri = data.getData();
+            App.dispatch(new Action<>(ActionType.SAVE_DOCUMENT, uri));
         }
     }
 }

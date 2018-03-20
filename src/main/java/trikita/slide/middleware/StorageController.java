@@ -1,17 +1,23 @@
 package trikita.slide.middleware;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,10 +36,14 @@ import trikita.slide.Slide;
 import trikita.slide.State;
 import trikita.slide.ui.Style;
 
+import static android.app.Activity.RESULT_OK;
+
 public class StorageController implements Store.Middleware<Action<ActionType, ?>, State> {
     public static final int OPEN_DOCUMENT_REQUEST_CODE = 43;
+    public static final int SAVE_DOCUMENT_REQUEST_CODE = 43;
     public static final int PICK_IMAGE_REQUEST_CODE = 44;
     public static final int EXPORT_PDF_REQUEST_CODE = 46;
+    public static final int OPEN_PDF_REQUEST_CODE = 47;
 
     private static final long FILE_WRITER_DELAY = 3000; // 3sec
 
@@ -74,6 +84,9 @@ public class StorageController implements Store.Middleware<Action<ActionType, ?>
         } else if (action.type == ActionType.PICK_IMAGE) {
             pickImage((Activity) action.value);
             return;
+        } else if (action.type == ActionType.EXIT_APP) {
+             ExitApp((Activity) action.value);
+            return;
         } else if (action.type == ActionType.INSERT_IMAGE) {
             String s = store.getState().text();
             int c = store.getState().cursor();
@@ -91,6 +104,11 @@ public class StorageController implements Store.Middleware<Action<ActionType, ?>
         } else if (action.type == ActionType.OPEN_DOCUMENT) {
             dumpToFile(false);
             openDocument((Activity) action.value);
+            return;
+            //Added to call the savedoc
+        } else if (action.type == ActionType.SAVE_DOCUMENT) {
+            dumpToFile(false);
+            saveDoc((Activity) action.value);
             return;
         } else if (action.type == ActionType.LOAD_DOCUMENT) {
             String doc = loadDocument((Uri) action.value);
@@ -133,8 +151,24 @@ public class StorageController implements Store.Middleware<Action<ActionType, ?>
             }
         }
     }
+    //Exiting App
+    private void ExitApp(Activity a)
+    {
+        a.finishAffinity();
+        System.exit(0);
+    }
 
+    //Changed CREATE TO OPEN in order to use that function for reading purposes only
     private void openDocument(Activity a) {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TITLE, a.getString(R.string.default_new_doc_name));
+        a.startActivityForResult(intent, OPEN_DOCUMENT_REQUEST_CODE);
+    }
+
+    //NewFunction for Saving
+    private void saveDoc(Activity a) {
         Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("text/plain");

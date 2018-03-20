@@ -12,11 +12,13 @@ public enum ActionType {
     NEXT_PAGE,
     PREV_PAGE,
 
+    SAVE_DOCUMENT,
     OPEN_DOCUMENT,
     LOAD_DOCUMENT,
     PICK_IMAGE,
     INSERT_IMAGE,
     SET_COLOR_SCHEME,
     CREATE_PDF,
-    EXPORT_PDF
+    EXPORT_PDF,
+    EXIT_APP
 }

@@ -4,6 +4,9 @@
         android:id="@+id/menu_open"
         android:title="@string/om_open"/>
     <item
+        android:id="@+id/menu_save"
+        android:title="@string/om_save"/>
+    <item
         android:id="@+id/menu_insert_image"
         android:title="@string/om_insert_image"/>
     <item
@@ -15,5 +18,8 @@
     <item
         android:id="@+id/menu_export_pdf"
         android:title="@string/om_export_pdf"/>
+    <item
+        android:id="@+id/menu_exit_app"
+        android:title="Exit"/>
 </menu>
 

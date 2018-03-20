@@ -114,8 +114,14 @@ public class MainLayout extends RenderableView {
             //} else if (item.getItemId() == R.id.menu_settings) {
             } else if (item.getItemId() == R.id.menu_export_pdf) {
                 App.dispatch(new Action<>(ActionType.CREATE_PDF, (Activity) v.getContext()));
-            }
-            return true;
+            }//Extra Menu To Seperate Save&Open Function
+            else if (item.getItemId() == R.id.menu_save) {
+            App.dispatch(new Action<>(ActionType.SAVE_DOCUMENT, (Activity) v.getContext()));
+            } //Extra Menu to Exit App
+            else if (item.getItemId() == R.id.menu_exit_app) {
+                App.dispatch(new Action<>(ActionType.EXIT_APP, (Activity) v.getContext()));
+        }
+        return true;
         });
         menu.show();
     }

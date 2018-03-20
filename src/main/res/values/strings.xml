@@ -14,8 +14,10 @@
     <string name="btn_ok">Ok</string>
 
     <string name="om_open">Open</string>
+    <string name="om_save">Save</string>
     <string name="om_insert_image">Insert image</string>
     <string name="om_style">Style</string>
     <string name="om_settings">Settings</string>
     <string name="om_export_pdf">Export to PDF</string>
+    <string name="om_exit_app">Exit</string>
 </resources>
