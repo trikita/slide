@@ -17,7 +17,7 @@ public class WindowController implements Store.Middleware<Action<ActionType, ?>,
     public void setWindow(Window w) {
         mWindow = w;
         if (w != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            w.setStatusBarColor(Style.COLOR_SCHEMES[App.getState().colorScheme()][1]);
+            w.setStatusBarColor(Style.COLOR_SCHEMES[App.getState().getCurrentPresentation().colorScheme()][1]);
         }
     }
 
@@ -28,8 +28,11 @@ public class WindowController implements Store.Middleware<Action<ActionType, ?>,
         if (mWindow != null) {
             switch (action.type) {
                 case SET_COLOR_SCHEME:
+                case PREVIOUS_PRESENTATION:
+                case NEXT_PRESENTATION:
+                case REMOVE_PRESENTATION:
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        mWindow.setStatusBarColor(Style.COLOR_SCHEMES[store.getState().colorScheme()][1]);
+                        mWindow.setStatusBarColor(Style.COLOR_SCHEMES[store.getState().getCurrentPresentation().colorScheme()][1]);
                     }
                     break;
                 case OPEN_PRESENTATION:

@@ -5,11 +5,31 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.view.Gravity;
-import android.view.View;
-
-import static trikita.anvil.DSL.*;
 
 import trikita.slide.R;
+
+import static trikita.anvil.DSL.CENTER;
+import static trikita.anvil.DSL.CENTER_HORIZONTAL;
+import static trikita.anvil.DSL.FILL;
+import static trikita.anvil.DSL.WRAP;
+import static trikita.anvil.DSL.alignParentBottom;
+import static trikita.anvil.DSL.alignParentEnd;
+import static trikita.anvil.DSL.alignParentTop;
+import static trikita.anvil.DSL.background;
+import static trikita.anvil.DSL.backgroundColor;
+import static trikita.anvil.DSL.backgroundResource;
+import static trikita.anvil.DSL.dip;
+import static trikita.anvil.DSL.fitsSystemWindows;
+import static trikita.anvil.DSL.gravity;
+import static trikita.anvil.DSL.layoutGravity;
+import static trikita.anvil.DSL.margin;
+import static trikita.anvil.DSL.padding;
+import static trikita.anvil.DSL.sip;
+import static trikita.anvil.DSL.size;
+import static trikita.anvil.DSL.text;
+import static trikita.anvil.DSL.textColor;
+import static trikita.anvil.DSL.textSize;
+import static trikita.anvil.DSL.typeface;
 
 public class Style {
     public final static String SLIDE_FONT = "sans-serif-light";
@@ -29,7 +49,6 @@ public class Style {
         {0xffffffff, 0xffe91e63, R.drawable.light_round_button, 0xff333333},    // white on pink
     };
 
-    private final static int CLOSE_BUTTON = 0;
     private final static int MENU_BUTTON = 1;
     private final static int CHECK_BUTTON = 2;
 
@@ -45,7 +64,7 @@ public class Style {
 
         public static void textStyle() {
             textColor(Color.BLACK);
-            typeface(Typeface.create("sans-serif-light", 0));
+            typeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
         }
         
         public static void previewSize() {
@@ -68,7 +87,7 @@ public class Style {
             margin(dip(12));
             gravity(Gravity.CENTER);
             text(ICONS[MENU_BUTTON]);
-            typeface("MaterialIcons-Regular.ttf");
+            typeface("fonts/MaterialIcons-Regular.ttf");
             textSize(sip(26));
             textColor(0xcc555555);
         }
@@ -78,7 +97,7 @@ public class Style {
         public static void circle(int fgColor, int bgColor) {
             ShapeDrawable circle = new ShapeDrawable(new OvalShape());
             circle.getPaint().setColor(bgColor);
-            backgroundDrawable(circle);
+            background(circle);
 
             size(dip(48), dip(48));
             layoutGravity(CENTER_HORIZONTAL);
@@ -95,30 +114,13 @@ public class Style {
         public static void itemSelected() {
             text(ICONS[CHECK_BUTTON]);
             textSize(sip(24));
-            typeface("MaterialIcons-Regular.ttf");
+            typeface("fonts/MaterialIcons-Regular.ttf");
         }
     }
 
     public static class Preview {
-        public static void background(int scheme) {
-            backgroundColor(COLOR_SCHEMES[scheme][1]);
-        }
-
-        public static void touchPlaceholder(View.OnClickListener l) {
-            v(View.class, () -> {
-                size(0, FILL);
-                weight(1f);
-                onClick(l);
-            });
-        }
-
-        public static void button(int scheme) {
-            size(dip(54), dip(54));
-            text(ICONS[CLOSE_BUTTON]);
-            textSize(sip(30));
-            textColor(COLOR_SCHEMES[scheme][3]);
-            typeface("MaterialIcons-Regular.ttf");
-            backgroundResource(COLOR_SCHEMES[scheme][2]);
+        public static void background() {
+            backgroundColor(Color.BLACK);
         }
     }
 }

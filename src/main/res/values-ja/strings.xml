@@ -6,16 +6,11 @@
 
     <string name="pdf_name_prefix">Slide-</string>
     <string name="failed_export_pdf">PDF のエクスポートに失敗しました</string>
-    <string name="default_new_doc_name">NewSlideDoc</string>
-    <string name="failed_open_doc">ドキュメントを開くことができませんでした</string>
-    <string name="failed_save_doc">ドキュメントが見つかりませんでした</string>
 
     <string name="dlg_style_picker_title">スタイルを選択</string>
     <string name="btn_ok">OK</string>
 
-    <string name="om_open">開く</string>
     <string name="om_insert_image">画像を挿入</string>
     <string name="om_style">スタイル</string>
-    <string name="om_settings">設定</string>
     <string name="om_export_pdf">PDF にエクスポート</string>
 </resources>

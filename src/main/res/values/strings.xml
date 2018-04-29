@@ -2,20 +2,41 @@
 <resources>
     <string name="app_name">Slide</string>
 
-    <string name="tutorial_text">SLIDE\n\nEach paragraph\nis a slide\n\nThis is a slide\n.\nwith a blank line\n\nTap on the preview\nto start the presentation.\nYou may also pick\na color scheme there.\n\nDone!\n\nDon\'t forget to export\nto PDF and share.</string>
+    <string name="tutorial_text">SLIDE\n\nEach paragraph\nis a slide\n\nThis is a slide\n.\nwith a blank line\n\nTap on the preview\nto start the presentation.\nYou may also pick\na color scheme there.\n\nDone!\n\nYou can also add UML!\n\nEnable PlantUML in the menu.\n\n@startuml\nBob->Alice : hello\n@enduml\n\n@startuml nw 50%\nclass Foo\n\nclass Bar\n@enduml\n.\n#Hello\n.\n@startuml se 50%\nclass Baz\n@enduml\n\nCheck out the PlantUML docs in the menu.\n\nWant to create more presentations?\n\nEdit this presentation\n.\nThen swipe right!\n\nSwipe left to go back.\n\nEach presentation has its own settings. :)\n\nDon\'t forget to export\nto PDF and share.</string>
 
     <string name="pdf_name_prefix">Slide-</string>
     <string name="failed_export_pdf">Failed to export to PDF</string>
-    <string name="default_new_doc_name">NewSlideDoc</string>
-    <string name="failed_open_doc">Failed to open a document</string>
-    <string name="failed_save_doc">Failed to found a document</string>
 
     <string name="dlg_style_picker_title">Pick a style</string>
-    <string name="btn_ok">Ok</string>
+    <string name="btn_ok">OK</string>
 
-    <string name="om_open">Open</string>
     <string name="om_insert_image">Insert image</string>
     <string name="om_style">Style</string>
-    <string name="om_settings">Settings</string>
     <string name="om_export_pdf">Export to PDF</string>
+    <string name="om_config_plantuml">Configure PlantUML</string>
+
+    <string name="pm_warning">Note: a PlantUML server is used to create the diagram. The textual data is sent via internet to the configured URL. For confidential information, use a trusted URL with HTTPS.</string>
+    <string name="pm_enable">Enable PlantUML</string>
+    <string name="pm_plantuml_endpoint">PlantUML Endpoint URL</string>
+
+    <string name="pm_plantuml_template_before">The configured text below is inserted at the beginning of every UML diagram.</string>
+    <string name="pm_plantuml_template_after">The configured text below is inserted at the end of every UML diagram.</string>
+
+    <string name="om_plantuml_docs">PlantUML docs</string>
+    <string name="om_template">Template</string>
+
+    <string name="template_before">The configured text below is inserted at the beginning of every slide.</string>
+    <string name="template_after">The configured text below is inserted at the end of every slide.</string>
+
+    <string-array name="pdf_resolutions">
+        <item>720p</item>
+        <item>1080p</item>
+        <item>4K</item>
+        <item>8K</item>
+    </string-array>
+
+    <string name="select_resolution">Select Resolution</string>
+    <string name="om_remove">Remove Presentation</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="completed_export_pdf">PDF Export Complete</string>
 </resources>

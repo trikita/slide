@@ -4,10 +4,9 @@ import android.app.Application;
 
 import trikita.anvil.Anvil;
 import trikita.jedux.Action;
-import trikita.jedux.Logger;
 import trikita.jedux.Store;
-import trikita.slide.middleware.StorageController;
 import trikita.slide.middleware.PersistanceController;
+import trikita.slide.middleware.StorageController;
 import trikita.slide.middleware.WindowController;
 
 public class App extends Application {
@@ -32,12 +31,9 @@ public class App extends Application {
 
         this.store = new Store<>(new State.Reducer(),
                 initialState,
-//                new Logger<>("Slide"),
                 persistanceController,
                 this.windowController,
                 sc);
-
-        sc.dumpToFile(false);   // false - with no delay
 
         this.store.subscribe(Anvil::render);
     }
@@ -50,7 +46,7 @@ public class App extends Application {
         return instance.store.getState();
     }
 
-    public static State dispatch(Action<ActionType, ?> action) {
-        return instance.store.dispatch(action);
+    public static void dispatch(Action<ActionType, ?> action) {
+        instance.store.dispatch(action);
     }
 }

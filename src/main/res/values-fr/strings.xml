@@ -6,16 +6,11 @@
   
   <string name="pdf_name_prefix">Slide-</string>
   <string name="failed_export_pdf">L\'export au format PDF a échoué</string>
-  <string name="default_new_doc_name">NewSlideDoc</string>
-  <string name="failed_open_doc">L\'ouverture du document a échoué</string>
-  <string name="failed_save_doc">Le document n\'a pas été trouvé</string>
-  
+
   <string name="dlg_style_picker_title">Choisir un style</string>
   <string name="btn_ok">Ok</string>
-  
-  <string name="om_open">Ouvrir</string>
+
   <string name="om_insert_image">Insérer une image</string>
   <string name="om_style">Style</string>
-  <string name="om_settings">Réglages</string>
   <string name="om_export_pdf">Exporter en PDF</string>
 </resources>

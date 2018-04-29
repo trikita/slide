@@ -1,6 +1,5 @@
 package trikita.slide;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -11,27 +10,36 @@ import android.text.Layout;
 import android.text.SpannableStringBuilder;
 import android.text.StaticLayout;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.text.style.TypefaceSpan;
 import android.view.Gravity;
 
+import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
-import com.squareup.picasso.Picasso;
+
+import net.sourceforge.plantuml.code.AsciiEncoder;
+import net.sourceforge.plantuml.code.URLEncoder;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.Deflater;
 
 import trikita.anvil.Anvil;
+import trikita.slide.preprocessors.PlantUMLPreprocessor;
+import trikita.slide.preprocessors.SlideTemplatePreprocessor;
 
 public class Slide {
 
     private static class Background {
         private static final Map<String, Integer> GRAVITY = new HashMap<>();
+
         static {
             GRAVITY.put("left", Gravity.LEFT);
             GRAVITY.put("top", Gravity.TOP);
@@ -47,10 +55,12 @@ public class Slide {
             GRAVITY.put("ne", Gravity.RIGHT | Gravity.TOP);
             GRAVITY.put("se", Gravity.RIGHT | Gravity.BOTTOM);
         }
+
         private final String url;
         private final float scale;
         private final int gravity;
-        public Background(String bg) {
+
+        Background(String bg) {
             int g = Gravity.CENTER;
             float scale = 1f;
             String url = null;
@@ -58,10 +68,11 @@ public class Slide {
                 if (part.endsWith("%")) {
                     try {
                         scale = Float.parseFloat(part.substring(0, part.length() - 1)) / 100;
-                    } catch (NumberFormatException ignored) {}
+                    } catch (NumberFormatException ignored) {
+                    }
                 } else if (GRAVITY.containsKey(part)) {
                     g = GRAVITY.get(part);
-                } else if (part.contains("://")){
+                } else if (part.contains("://")) {
                     url = part;
                 }
             }
@@ -72,11 +83,12 @@ public class Slide {
     }
 
     private final List<Background> backgrounds = new ArrayList<>();
-    private final Map<String, CacheTarget> bitmaps = new HashMap<>();
+    private final Map<String,CacheTarget> bitmaps = new HashMap<>();
     private final SpannableStringBuilder text = new SpannableStringBuilder();
 
-    private Slide(String s) {
+    Slide(String s) {
         int emSpanStart = -1;
+        int codeSpanStart = -1;
         for (String line : s.split("\n")) {
             if (line.startsWith("@")) {
                 backgrounds.add(new Background(line.substring(1)));
@@ -93,9 +105,9 @@ public class Slide {
                 if (line.startsWith(".")) {
                     line = line.substring(1);
                 }
-                // Handle emphasis
                 for (int i = 0; i < line.length(); i++) {
                     char c = line.charAt(i);
+                    // Handle emphasis
                     if (c == '*') {
                         if (emSpanStart == -1) {
                             emSpanStart = text.length();
@@ -106,6 +118,18 @@ public class Slide {
                                 text.append('*');
                             }
                             emSpanStart = -1;
+                        }
+                    // Handle inline code
+                    } else if (c == '`') {
+                        if (codeSpanStart == -1) {
+                            codeSpanStart = text.length();
+                        } else {
+                            if (codeSpanStart != text.length()) {
+                                text.setSpan(new TypefaceSpan("monospace"), codeSpanStart, text.length(), 0);
+                            } else {
+                                text.append('`');
+                            }
+                            codeSpanStart = -1;
                         }
                     } else {
                         text.append(c);
@@ -121,6 +145,7 @@ public class Slide {
 
     private static class CacheTarget implements Target {
         private Bitmap cacheBitmap;
+
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
             cacheBitmap = bitmap;
@@ -128,26 +153,33 @@ public class Slide {
                 Anvil.render();
             }
         }
-        @Override public void onBitmapFailed(Drawable errorDrawable) {}
-        @Override public void onPrepareLoad(Drawable placeHolderDrawable) {}
-        public Bitmap getCacheBitmap() {
+
+        @Override
+        public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+        }
+
+        Bitmap getCacheBitmap() {
             return cacheBitmap;
         }
     }
 
-    public void render(Context c, Canvas canvas, int width, int height, String typeface, int fg, int bg, boolean blocking) {
+    public void render(Canvas canvas, int width, int height, String typeface, int fg, int bg, boolean blocking) {
         TextPaint textPaint = new TextPaint();
         canvas.drawColor(bg);
         textPaint.setColor(fg);
         textPaint.setAntiAlias(true);
-        textPaint.setTypeface(Typeface.create(typeface, 0));
+        textPaint.setTypeface(Typeface.create(typeface, Typeface.NORMAL));
 
-        for (Background img: backgrounds) {
+        for (Background img : backgrounds) {
             if (img.url != null) {
                 Bitmap b = null;
                 CacheTarget cacheTarget = new CacheTarget();
-                bitmaps.put(img.url, cacheTarget);
-                RequestCreator request = Picasso.with(c)
+                bitmaps.put(img.url,cacheTarget);
+                RequestCreator request = Picasso.get()
                         .load(img.url);
                 if (img.scale > 0) {
                     request = request.resize((int) (width * img.scale), (int) (height * img.scale));
@@ -179,8 +211,7 @@ public class Slide {
         int w = (int) (width * (1 - margin * 2));
         int h = (int) (height * (1 - margin * 2));
 
-
-        for (int textSize = height; textSize > 1 ; textSize--) {
+        for (int textSize = height; textSize > 1; textSize--) {
             textPaint.setTextSize(textSize);
             if (StaticLayout.getDesiredWidth(text, textPaint) <= w) {
                 StaticLayout layout = new StaticLayout(text, textPaint, w, Layout.Alignment.ALIGN_NORMAL, 1, 0, false);
@@ -189,12 +220,12 @@ public class Slide {
                 }
                 int l = 0;
                 for (int i = 0; i < layout.getLineCount(); i++) {
-                    int m = (int) (width - layout.getLineWidth(i))/2;
+                    int m = (int) (width - layout.getLineWidth(i)) / 2;
                     if (i == 0 || m < l) {
                         l = m;
                     }
                 }
-                canvas.translate(l, (height - layout.getHeight())/2);
+                canvas.translate(l, (height - layout.getHeight()) / 2);
 
                 textPaint.setColor(bg);
                 textPaint.setStyle(Paint.Style.STROKE);
@@ -209,14 +240,5 @@ public class Slide {
                 return;
             }
         }
-    }
-
-    public static List<Slide> parse(String s) {
-        List<Slide> slides = new ArrayList<>();
-        String[] paragraphs = s.split("(\n\\s*){2,}");
-        for (String par : paragraphs) {
-            slides.add(new Slide(par));
-        }
-        return slides;
     }
 }

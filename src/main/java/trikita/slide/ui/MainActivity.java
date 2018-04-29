@@ -60,9 +60,6 @@ public class MainActivity extends Activity {
         } else if (requestCode == StorageController.PICK_IMAGE_REQUEST_CODE) {
             Uri uri = data.getData();
             App.dispatch(new Action<>(ActionType.INSERT_IMAGE, uri));
-        } else if (requestCode == StorageController.OPEN_DOCUMENT_REQUEST_CODE) {
-            Uri uri = data.getData();
-            App.dispatch(new Action<>(ActionType.LOAD_DOCUMENT, uri));
         }
     }
 }
