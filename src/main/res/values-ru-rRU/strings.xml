@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Slide</string>
+
+    <string name="tutorial_text">SLIDE\n\nКаждый параграф\nэто слайд\n\nЭто слайд\n.\nс пустой строкой\n\nНажмите на превью\nчтобы начать презентацию.\nВы так же можете выбрать\nцветовую схему.\n\nГотово!\n\nНе забудьте экспортировать\nв PDF и поделиться.</string>
+
+    <string name="pdf_name_prefix">Слайд-</string>
+    <string name="failed_export_pdf">Не удалось экспортировать в PDF</string>
+    <string name="default_new_doc_name">NewSlideDoc</string>
+    <string name="failed_open_doc">Не удалось открыть документ</string>
+    <string name="failed_save_doc">Не удалось найти документ</string>
+
+    <string name="dlg_style_picker_title">Выберите стиль</string>
+    <string name="btn_ok">Ok</string>
+
+    <string name="om_open">Открыть</string>
+    <string name="om_insert_image">Вставить изображение</string>
+    <string name="om_style">Стиль</string>
+    <string name="om_settings">Настройки</string>
+    <string name="om_export_pdf">Экспортировать в PDF</string>
+</resources>
