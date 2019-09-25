@@ -135,7 +135,7 @@ public class StorageController implements Store.Middleware<Action<ActionType, ?>
     }
 
     private void openDocument(Activity a) {
-        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_TITLE, a.getString(R.string.default_new_doc_name));
