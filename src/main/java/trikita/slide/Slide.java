@@ -1,6 +1,5 @@
 package trikita.slide;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -16,9 +15,9 @@ import android.text.style.StyleSpan;
 import android.text.style.TypefaceSpan;
 import android.view.Gravity;
 
+import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
-import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,11 +26,14 @@ import java.util.List;
 import java.util.Map;
 
 import trikita.anvil.Anvil;
+import trikita.slide.functions.LoadingScreenRenderer;
+import trikita.slide.ui.Style;
 
 public class Slide {
 
     private static class Background {
         private static final Map<String, Integer> GRAVITY = new HashMap<>();
+
         static {
             GRAVITY.put("left", Gravity.LEFT);
             GRAVITY.put("top", Gravity.TOP);
@@ -47,10 +49,12 @@ public class Slide {
             GRAVITY.put("ne", Gravity.RIGHT | Gravity.TOP);
             GRAVITY.put("se", Gravity.RIGHT | Gravity.BOTTOM);
         }
+
         private final String url;
         private final float scale;
         private final int gravity;
-        public Background(String bg) {
+
+        Background(String bg) {
             int g = Gravity.CENTER;
             float scale = 1f;
             String url = null;
@@ -58,10 +62,11 @@ public class Slide {
                 if (part.endsWith("%")) {
                     try {
                         scale = Float.parseFloat(part.substring(0, part.length() - 1)) / 100;
-                    } catch (NumberFormatException ignored) {}
+                    } catch (NumberFormatException ignored) {
+                    }
                 } else if (GRAVITY.containsKey(part)) {
                     g = GRAVITY.get(part);
-                } else if (part.contains("://")){
+                } else if (part.contains(":/")) {
                     url = part;
                 }
             }
@@ -72,30 +77,29 @@ public class Slide {
     }
 
     private final List<Background> backgrounds = new ArrayList<>();
-    private final Map<String, CacheTarget> bitmaps = new HashMap<>();
+    private final Map<String,CacheTarget> bitmaps = new HashMap<>();
     private final SpannableStringBuilder text = new SpannableStringBuilder();
 
-    private Slide(String s) {
+    private final int fg, bg;
+
+    public Slide(String s, int fg, int bg) {
         int emSpanStart = -1;
+        int codeSpanStart = -1;
         for (String line : s.split("\n")) {
-            if (line.startsWith("@")) {
+            if (Presentation.isBackground(line)) {
                 backgrounds.add(new Background(line.substring(1)));
             } else if (line.startsWith("#")) {
                 int start = text.length();
                 text.append(line.substring(1)).append('\n');
                 text.setSpan(new RelativeSizeSpan(1.6f), start, text.length(), 0);
                 text.setSpan(new StyleSpan(Typeface.BOLD), start, text.length(), 0);
-            } else if (line.startsWith("  ")) {
-                int start = text.length();
-                text.append(line.substring(2)).append('\n');
-                text.setSpan(new TypefaceSpan("monospace"), start, text.length(), 0);
             } else {
-                if (line.startsWith(".")) {
+                if (Presentation.possibleLineBreak(line)) {
                     line = line.substring(1);
                 }
-                // Handle emphasis
                 for (int i = 0; i < line.length(); i++) {
                     char c = line.charAt(i);
+                    // Handle emphasis
                     if (c == '*') {
                         if (emSpanStart == -1) {
                             emSpanStart = text.length();
@@ -107,6 +111,18 @@ public class Slide {
                             }
                             emSpanStart = -1;
                         }
+                    // Handle inline code
+                    } else if (c == '`') {
+                        if (codeSpanStart == -1) {
+                            codeSpanStart = text.length();
+                        } else {
+                            if (codeSpanStart != text.length()) {
+                                text.setSpan(new TypefaceSpan("monospace"), codeSpanStart, text.length(), 0);
+                            } else {
+                                text.append('`');
+                            }
+                            codeSpanStart = -1;
+                        }
                     } else {
                         text.append(c);
                     }
@@ -117,10 +133,14 @@ public class Slide {
         if (text.length() > 0 && text.charAt(text.length() - 1) == '\n') {
             text.delete(text.length() - 1, text.length());
         }
+
+        this.fg = fg;
+        this.bg = bg;
     }
 
     private static class CacheTarget implements Target {
         private Bitmap cacheBitmap;
+
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
             cacheBitmap = bitmap;
@@ -128,26 +148,35 @@ public class Slide {
                 Anvil.render();
             }
         }
-        @Override public void onBitmapFailed(Drawable errorDrawable) {}
-        @Override public void onPrepareLoad(Drawable placeHolderDrawable) {}
-        public Bitmap getCacheBitmap() {
+
+        @Override
+        public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+        }
+
+        Bitmap getCacheBitmap() {
             return cacheBitmap;
         }
     }
 
-    public void render(Context c, Canvas canvas, int width, int height, String typeface, int fg, int bg, boolean blocking) {
+    public void render(Canvas canvas, String typeface, boolean blocking) {
+        final int width = canvas.getWidth();
+        final int height = canvas.getHeight();
+        boolean loadingImages = false;
+
         TextPaint textPaint = new TextPaint();
         canvas.drawColor(bg);
         textPaint.setColor(fg);
         textPaint.setAntiAlias(true);
-        textPaint.setTypeface(Typeface.create(typeface, 0));
+        textPaint.setTypeface(Typeface.create(typeface, Typeface.NORMAL));
+        textPaint.setFlags(textPaint.getFlags() | TextPaint.EMBEDDED_BITMAP_TEXT_FLAG);
 
-        for (Background img: backgrounds) {
+        for (Background img : backgrounds) {
             if (img.url != null) {
-                Bitmap b = null;
-                CacheTarget cacheTarget = new CacheTarget();
-                bitmaps.put(img.url, cacheTarget);
-                RequestCreator request = Picasso.with(c)
+                RequestCreator request = Picasso.get()
                         .load(img.url);
                 if (img.scale > 0) {
                     request = request.resize((int) (width * img.scale), (int) (height * img.scale));
@@ -155,6 +184,8 @@ public class Slide {
                     request = request.resize(width, height);
                 }
                 request = request.centerInside();
+
+                Bitmap b = null;
                 if (blocking) {
                     try {
                         b = request.get();
@@ -162,7 +193,12 @@ public class Slide {
                         e.printStackTrace();
                     }
                 } else {
-                    request.into(cacheTarget);
+                    CacheTarget cacheTarget = bitmaps.get(img.url+width);
+                    if(cacheTarget == null){
+                        cacheTarget = new CacheTarget();
+                        bitmaps.put(img.url+width, cacheTarget);
+                        request.into(cacheTarget);
+                    }
                     b = cacheTarget.getCacheBitmap();
                 }
                 if (b != null) {
@@ -170,8 +206,16 @@ public class Slide {
                     Gravity.apply(img.gravity, b.getWidth(), b.getHeight(),
                             new Rect(0, 0, width, height), r);
                     canvas.drawBitmap(b, r.left, r.top, textPaint);
+                } else {
+                    loadingImages = true;
                 }
             }
+        }
+
+        if(loadingImages) {
+            (new LoadingScreenRenderer(App.instance.getApplicationContext(), fg, bg, canvas, "Loading images..."))
+                .run();
+            return;
         }
 
         float margin = 0.1f;
@@ -179,44 +223,67 @@ public class Slide {
         int w = (int) (width * (1 - margin * 2));
         int h = (int) (height * (1 - margin * 2));
 
-
-        for (int textSize = height; textSize > 1 ; textSize--) {
+        for (int textSize = height; textSize > 1; textSize--) {
             textPaint.setTextSize(textSize);
-            if (StaticLayout.getDesiredWidth(text, textPaint) <= w) {
-                StaticLayout layout = new StaticLayout(text, textPaint, w, Layout.Alignment.ALIGN_NORMAL, 1, 0, false);
+            float dw = StaticLayout.getDesiredWidth(text, textPaint);
+
+            if (dw <= w) {
+                StaticLayout layout = new StaticLayout(
+                    text, textPaint, (int)dw, Layout.Alignment.ALIGN_NORMAL,
+                    1.0f, 0.0f, false
+                );
+
                 if (layout.getHeight() >= h) {
                     continue;
                 }
+
                 int l = 0;
                 for (int i = 0; i < layout.getLineCount(); i++) {
-                    int m = (int) (width - layout.getLineWidth(i))/2;
+                    int m = (int) (width - layout.getLineWidth(i)) / 2;
                     if (i == 0 || m < l) {
                         l = m;
                     }
                 }
-                canvas.translate(l, (height - layout.getHeight())/2);
+
+                int t = (height - layout.getHeight()) / 2;
+                canvas.translate(l, t);
 
                 textPaint.setColor(bg);
                 textPaint.setStyle(Paint.Style.STROKE);
                 textPaint.setStrokeWidth(8);
-                layout = new StaticLayout(text, textPaint, w, Layout.Alignment.ALIGN_NORMAL, 1, 0, false);
                 layout.draw(canvas);
+
                 textPaint.setColor(fg);
                 textPaint.setStyle(Paint.Style.FILL);
                 textPaint.setStrokeWidth(0);
-                layout = new StaticLayout(text, textPaint, w, Layout.Alignment.ALIGN_NORMAL, 1, 0, false);
                 layout.draw(canvas);
+
+                canvas.translate(-l,-t);
                 return;
             }
         }
     }
 
-    public static List<Slide> parse(String s) {
-        List<Slide> slides = new ArrayList<>();
-        String[] paragraphs = s.split("(\n\\s*){2,}");
-        for (String par : paragraphs) {
-            slides.add(new Slide(par));
+    public static class Builder {
+        public final Presentation presentation;
+        public final String text;
+        public final int width;
+        public final int height;
+
+        public Builder(String text, Presentation p, int width) {
+            this.text = text;
+            this.presentation = p;
+            this.width = width;
+            this.height = width * 9 / 16;
         }
-        return slides;
+
+        public Builder withText(String text) {
+            return new Builder(text, presentation, width);
+        }
+
+        public Slide build() {
+            int[] cs = Style.COLOR_SCHEMES[presentation.colorScheme()];
+            return new Slide(text, cs[0], cs[1]);
+        }
     }
 }

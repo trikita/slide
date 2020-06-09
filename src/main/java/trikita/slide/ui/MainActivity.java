@@ -16,8 +16,11 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle b) {
         super.onCreate(b);
-        setContentView(new MainLayout(this));
-        App.getWindowController().setWindow(getWindow());
+        App.setMainActivity(this);
+        MainLayout l = new MainLayout(this);
+        setContentView(l);
+        App.dispatch(new Action<>(ActionType.SET_WINDOW, getWindow()));
+        App.setMainLayout(l);
     }
 
     @Override
@@ -35,7 +38,8 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onDestroy() {
-        App.getWindowController().setWindow(null);
+        App.setMainLayout(null);
+        App.dispatch(new Action<>(ActionType.SET_WINDOW, null));
         super.onDestroy();
     }
 
@@ -60,9 +64,6 @@ public class MainActivity extends Activity {
         } else if (requestCode == StorageController.PICK_IMAGE_REQUEST_CODE) {
             Uri uri = data.getData();
             App.dispatch(new Action<>(ActionType.INSERT_IMAGE, uri));
-        } else if (requestCode == StorageController.OPEN_DOCUMENT_REQUEST_CODE) {
-            Uri uri = data.getData();
-            App.dispatch(new Action<>(ActionType.LOAD_DOCUMENT, uri));
         }
     }
 }

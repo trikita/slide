@@ -1,0 +1,47 @@
+<html>
+<head>
+<style>body { padding:0; margin:0; }</style>
+<script type="text/javascript">
+  function mathTarget() {
+    return document.getElementById('math_target');
+  }
+
+  function typeset(fg,maths) {
+    mathTarget().style.color = '#'+fg;
+
+    var longestLine = 1;
+    var inner = [];
+    var ma = maths.split("<br>");
+    for(i in ma) {
+      var formula = ma[i];
+      longestLine = Math.max(longestLine, formula.replace(" ","").length);
+      if(formula === "")
+        inner.push("");
+      else
+        inner.push("$$"+formula+"$$");
+    }
+    mathTarget().style.fontSize = ""+Math.floor(90/longestLine)+"vw";
+    mathTarget().innerHTML = inner.join("<br/>");
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub,"math_target"]);
+  }
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX", "output/HTML-CSS"],
+    skipStartupTypeset: true,
+    showMathMenu: false,
+    messageStyle: "none"
+  });
+
+  MathJax.Hub.Register.MessageHook("End Process", function() {
+    Android.onTypeset(parseInt(mathTarget().style.fontSize));
+  });
+</script>
+<script type="text/javascript" src="./MathJax/MathJax.js"></script>
+<meta charset="utf-8">
+</head>
+<body onload="Android.onLoaded()">
+<p id="math_target" style="margin:0;padding:1px;display:inline-block;"></p>
+</body>
+</html>

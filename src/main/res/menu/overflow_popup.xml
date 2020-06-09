@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/menu_open"
-        android:title="@string/om_open"/>
+        android:id="@+id/menu_remove_presentation"
+        android:title="@string/om_remove" />
     <item
         android:id="@+id/menu_insert_image"
         android:title="@string/om_insert_image"/>
@@ -13,7 +13,16 @@
         <!--android:id="@+id/menu_settings"-->
         <!--android:title="@string/om_settings"/>-->
     <item
+        android:id="@+id/menu_template"
+        android:title="@string/om_template" />
+    <item
         android:id="@+id/menu_export_pdf"
         android:title="@string/om_export_pdf"/>
+    <item
+        android:id="@+id/menu_config_plantuml"
+        android:title="@string/om_config_plantuml" />
+    <item
+        android:id="@+id/menu_plantuml_docs"
+        android:title="@string/om_plantuml_docs" />
 </menu>
 
