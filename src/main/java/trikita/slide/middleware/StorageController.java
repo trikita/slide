@@ -5,9 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
 import android.os.ParcelFileDescriptor;
 import android.widget.Toast;
 
@@ -19,7 +19,10 @@ import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.TimeZone;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import trikita.jedux.Action;
 import trikita.jedux.Store;
@@ -39,6 +42,8 @@ public class StorageController implements Store.Middleware<Action<ActionType, ?>
 
     private Context mContext = null;
     private final Handler mHandler;
+    private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
+    private final Handler mMainHandler = new Handler(Looper.getMainLooper());
 
     private final Runnable mDocUpdater = () -> {
         if (App.getState().uri() != null) {
@@ -69,7 +74,7 @@ public class StorageController implements Store.Middleware<Action<ActionType, ?>
             createPdf((Activity) action.value);
             return;
         } else if (action.type == ActionType.EXPORT_PDF) {
-            new PdfExportTask(store, (Uri) action.value).execute();
+            exportPdf(store, (Uri) action.value);
             return;
         } else if (action.type == ActionType.PICK_IMAGE) {
             pickImage((Activity) action.value);
@@ -172,20 +177,11 @@ public class StorageController implements Store.Middleware<Action<ActionType, ?>
         a.startActivityForResult(intent, EXPORT_PDF_REQUEST_CODE);
     }
 
-    private class PdfExportTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final Store<Action<ActionType, ?>, State> store;
-        private final Uri uri;
-
-        public PdfExportTask(Store<Action<ActionType, ?>, State> store, Uri uri) {
-            this.store = store;
-            this.uri = uri;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
+    private void exportPdf(Store<Action<ActionType, ?>, State> store, Uri uri) {
+        mExecutor.execute(() -> {
             PdfDocument document = new PdfDocument();
             ParcelFileDescriptor pfd = null;
+            boolean ok = false;
             try {
                 PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(640, 640 * 9 / 16, 1).create();
 
@@ -206,32 +202,28 @@ public class StorageController implements Store.Middleware<Action<ActionType, ?>
                 if (pfd != null) {
                     FileOutputStream fos = new FileOutputStream(pfd.getFileDescriptor());
                     document.writeTo(fos);
-                    return true;
-                } else {
-                    return false;
+                    fos.close();
+                    ok = true;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-                return false;
             } finally {
                 document.close();
                 if (pfd != null) {
                     try { pfd.close(); } catch (IOException ignored) {}
                 }
             }
-        }
 
-        @Override
-        protected void onPostExecute(Boolean ok) {
-            super.onPostExecute(ok);
             if (!ok) {
-                Toast.makeText(mContext, mContext.getString(R.string.failed_export_pdf), Toast.LENGTH_LONG).show();
+                mMainHandler.post(() ->
+                    Toast.makeText(mContext, mContext.getString(R.string.failed_export_pdf), Toast.LENGTH_LONG).show()
+                );
             }
-        }
+        });
     }
 
     private String getTimestamp() {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd-HHmm");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd-HHmm", Locale.US);
         return df.format(Calendar.getInstance(TimeZone.getDefault()).getTimeInMillis());
     }
 
