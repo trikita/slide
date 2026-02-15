@@ -3,6 +3,8 @@ package trikita.slide.middleware;
 import android.os.Build;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
 
 import trikita.jedux.Action;
 import trikita.jedux.Store;
@@ -33,13 +35,41 @@ public class WindowController implements Store.Middleware<Action<ActionType, ?>,
                     }
                     break;
                 case OPEN_PRESENTATION:
-                    int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-                    mWindow.getDecorView().setSystemUiVisibility(uiOptions);
+                    hideSystemBars();
                     break;
                 case CLOSE_PRESENTATION:
-                    mWindow.getDecorView().setSystemUiVisibility(0);
+                    showSystemBars();
                     break;
             }
+        }
+    }
+
+    private void hideSystemBars() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            mWindow.setDecorFitsSystemWindows(false);
+            WindowInsetsController controller = mWindow.getInsetsController();
+            if (controller != null) {
+                controller.hide(WindowInsets.Type.systemBars());
+                controller.setSystemBarsBehavior(
+                        WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+            }
+        } else {
+            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+            mWindow.getDecorView().setSystemUiVisibility(uiOptions);
+        }
+    }
+
+    private void showSystemBars() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            mWindow.setDecorFitsSystemWindows(true);
+            WindowInsetsController controller = mWindow.getInsetsController();
+            if (controller != null) {
+                controller.show(WindowInsets.Type.systemBars());
+            }
+        } else {
+            mWindow.getDecorView().setSystemUiVisibility(0);
         }
     }
 }

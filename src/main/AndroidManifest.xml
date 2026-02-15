@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="trikita.slide">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
 
     <application android:name="App"
         android:label="@string/app_name"
@@ -10,6 +11,7 @@
         android:allowBackup="true">
 
         <activity android:name=".ui.MainActivity"
+            android:exported="true"
             android:theme="@style/fullscreen"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:label="@string/app_name">

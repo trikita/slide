@@ -19,7 +19,7 @@ public class PersistanceController implements Store.Middleware<Action<ActionType
     private final Gson mGson;
 
     public PersistanceController(Context c) {
-        mPreferences = c.getSharedPreferences("data", 0);
+        mPreferences = c.getSharedPreferences("data", Context.MODE_PRIVATE);
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapterFactory(new GsonAdaptersState());
         mGson = gsonBuilder.create();

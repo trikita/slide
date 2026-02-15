@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.text.Layout;
 import android.text.SpannableStringBuilder;
 import android.text.StaticLayout;
@@ -88,7 +89,11 @@ public class Slide {
             } else if (line.startsWith("  ")) {
                 int start = text.length();
                 text.append(line.substring(2)).append('\n');
-                text.setSpan(new TypefaceSpan("monospace"), start, text.length(), 0);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    text.setSpan(new TypefaceSpan(Typeface.MONOSPACE), start, text.length(), 0);
+                } else {
+                    text.setSpan(new TypefaceSpan("monospace"), start, text.length(), 0);
+                }
             } else {
                 if (line.startsWith(".")) {
                     line = line.substring(1);
@@ -128,7 +133,7 @@ public class Slide {
                 Anvil.render();
             }
         }
-        @Override public void onBitmapFailed(Drawable errorDrawable) {}
+        @Override public void onBitmapFailed(Exception e, Drawable errorDrawable) {}
         @Override public void onPrepareLoad(Drawable placeHolderDrawable) {}
         public Bitmap getCacheBitmap() {
             return cacheBitmap;
@@ -147,7 +152,7 @@ public class Slide {
                 Bitmap b = null;
                 CacheTarget cacheTarget = new CacheTarget();
                 bitmaps.put(img.url, cacheTarget);
-                RequestCreator request = Picasso.with(c)
+                RequestCreator request = Picasso.get()
                         .load(img.url);
                 if (img.scale > 0) {
                     request = request.resize((int) (width * img.scale), (int) (height * img.scale));
@@ -183,7 +188,7 @@ public class Slide {
         for (int textSize = height; textSize > 1 ; textSize--) {
             textPaint.setTextSize(textSize);
             if (StaticLayout.getDesiredWidth(text, textPaint) <= w) {
-                StaticLayout layout = new StaticLayout(text, textPaint, w, Layout.Alignment.ALIGN_NORMAL, 1, 0, false);
+                StaticLayout layout = createStaticLayout(text, textPaint, w);
                 if (layout.getHeight() >= h) {
                     continue;
                 }
@@ -199,15 +204,27 @@ public class Slide {
                 textPaint.setColor(bg);
                 textPaint.setStyle(Paint.Style.STROKE);
                 textPaint.setStrokeWidth(8);
-                layout = new StaticLayout(text, textPaint, w, Layout.Alignment.ALIGN_NORMAL, 1, 0, false);
+                layout = createStaticLayout(text, textPaint, w);
                 layout.draw(canvas);
                 textPaint.setColor(fg);
                 textPaint.setStyle(Paint.Style.FILL);
                 textPaint.setStrokeWidth(0);
-                layout = new StaticLayout(text, textPaint, w, Layout.Alignment.ALIGN_NORMAL, 1, 0, false);
+                layout = createStaticLayout(text, textPaint, w);
                 layout.draw(canvas);
                 return;
             }
+        }
+    }
+
+    private static StaticLayout createStaticLayout(CharSequence text, TextPaint paint, int width) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return StaticLayout.Builder.obtain(text, 0, text.length(), paint, width)
+                    .setAlignment(Layout.Alignment.ALIGN_NORMAL)
+                    .setLineSpacing(0, 1)
+                    .setIncludePad(false)
+                    .build();
+        } else {
+            return new StaticLayout(text, paint, width, Layout.Alignment.ALIGN_NORMAL, 1, 0, false);
         }
     }
 
