@@ -67,4 +67,7 @@ dependencies {
     compileOnly 'org.immutables:value:2.1.14'
 }
 
-apply from: 'https://raw.github.com/trikita/gradle-android-signing/master/gradle-android-signing.gradle'
+try {
+    apply from: 'https://raw.github.com/trikita/gradle-android-signing/master/gradle-android-signing.gradle'
+} catch (Exception ignored) {
+}
