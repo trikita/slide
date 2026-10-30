@@ -2,7 +2,7 @@ package trikita.slide;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.immutables.gson.Gson;
 import org.immutables.value.Value;
